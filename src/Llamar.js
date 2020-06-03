@@ -20,7 +20,7 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import lodash from 'lodash';
  
-let socket = io('http://localhost:5000');
+let socket = io('https://callcenter-backend.herokuapp.com/');
 socket = io.connect();
 
 class EditarGestion extends React.Component {

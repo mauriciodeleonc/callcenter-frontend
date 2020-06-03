@@ -6,7 +6,7 @@ import { faHeadset, faPause, faPhoneSlash } from '@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import io from 'socket.io-client';
 import LoginRedirect from './LoginRedirect';
-let socket = io('http://localhost:5000');
+let socket = io('https://callcenter-backend.herokuapp.com/');
 socket = io.connect();
 
 class Supervision extends React.Component{
