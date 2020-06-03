@@ -15,6 +15,7 @@ import Login from './Login';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import axios from 'axios';
 import './fontawesome';
 
 
@@ -27,6 +28,8 @@ class App extends React.Component {
     }
     this.handleSession = this.handleSession.bind(this);
     this.logOut = this.logOut.bind(this);
+
+    axios.defaults.baseURL = 'https://callcenter-frontend.herokuapp.com'
   }
 
   logOut(){
