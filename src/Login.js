@@ -27,6 +27,7 @@ class Login extends React.Component{
             alert('Asegurese de llenar correctamente todos los campos');
         } else {
             axios.get('/getEmpleado', {
+                headers: {"Access-Control-Allow-Origin": "*"},
                 params: {
                     usuario: this.state.usuario,
                     contrasena: this.state.contrasena
