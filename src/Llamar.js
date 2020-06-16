@@ -79,7 +79,7 @@ class EditarGestion extends React.Component {
                         params: {
                             idGestion: this.props.cliente.cliente.gestiones[0][0].idGestion,
                             fechaPromesa: fechaPromesa,
-                            montoPromesa: this.state.montoPromesa
+                            montoPromesa: parseFloat(this.state.montoPromesa)
                         }
                     })
                 }
@@ -344,7 +344,7 @@ class GenerarReporte extends React.Component {
                         params: {
                             idGestion: response.data[0][0].idGestion,
                             fechaPromesa: fechaPromesa,
-                            montoPromesa: this.state.montoPromesa
+                            montoPromesa: parseFloat(this.state.montoPromesa)
                         }
                     })
                 }
