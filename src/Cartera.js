@@ -447,7 +447,7 @@ class Cartera extends React.Component{
                             <th>Nombre Cliente</th>
                             <th>Tel. Casa</th>
                             <th>Tel. Celular</th>
-                            <th>Fecha Otorgamiento (MM-DD-YYYY)</th>
+                            <th>Fecha Otorgamiento</th>
                             <th>Bucket Min</th>
                             <th>Bucket Max</th>
                             <th>Cuota</th>
@@ -456,7 +456,7 @@ class Cartera extends React.Component{
                             <th>Total</th>
                             <th>Liq. Actual</th>
                             <th>Plazo</th>
-                            <th>Fecha Último Pago (MM-DD-YYYY)</th>
+                            <th>Fecha Último Pago</th>
                             <th>Nombre Referencia</th>
                             <th>Tel. Casa Ref.</th>
                             <th>Tel. Cel. Ref.</th>
@@ -469,10 +469,10 @@ class Cartera extends React.Component{
                     <tbody>
                         {this.state.filas.map(fila => {
                             let fechaOtorgamiento = new Date(Date.parse(fila.fechaOtorgamiento));
-                            fechaOtorgamiento = (fechaOtorgamiento.getMonth() + 1) + "-" + fechaOtorgamiento.getDate() + "-" + fechaOtorgamiento.getFullYear();
+                            fechaOtorgamiento = fechaOtorgamiento.getDate() + "/" + (fechaOtorgamiento.getMonth() + 1) + "/" + fechaOtorgamiento.getFullYear();
 
                             let ultimoPago = new Date(Date.parse(fila.fechaUltimoPago));
-                            ultimoPago = (ultimoPago.getMonth() + 1) + "-" + ultimoPago.getDate() + "-" + ultimoPago.getFullYear();
+                            ultimoPago = ultimoPago.getDate() + "/" + (ultimoPago.getMonth() + 1) + "/" + ultimoPago.getFullYear();
                             
                             return(
                                 <tr key={fila.idReferencia}>

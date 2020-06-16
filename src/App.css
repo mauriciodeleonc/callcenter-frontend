@@ -6,8 +6,17 @@ h1{
   margin-top: 20px;
 }
 
+input:focus{
+  border-color: #7E2CFF !important;
+  background-color: white;
+}
+
+.form-control:focus{
+  box-shadow: 0 0 0 .2rem rgba(126,44,255,.20);
+}
+
 table, .table{
-  font-size: x-small;
+  font-size: small;
   border-radius: 10px;
   border-style: none;
   background-color: white;
@@ -23,11 +32,50 @@ th, td, tr, thead, .table-responsive{
 
 .cartera-table{
   display: inline-block !important;
-  height: 70vh !important;
+  max-height: 70vh !important;
   overflow: auto !important;
 }
 
 .cartera-table th {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  background-color: white !important;
+}
+
+.phones-table{
+  display: inline-block !important;
+  max-height: 25vh !important;
+  overflow: auto !important;
+}
+
+.phones-table th {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  background-color: white !important;
+}
+
+.creditos-table{
+  display: inline-block !important;
+  max-height: 25vh !important;
+  overflow: auto !important;
+}
+
+.creditos-table th {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  background-color: white !important;
+}
+
+.gestiones-table{
+  display: inline-block !important;
+  max-height: 40vh !important;
+  overflow: auto !important;
+}
+
+.gestiones-table th {
   position: -webkit-sticky !important;
   position: sticky !important;
   top: 0 !important;
@@ -126,13 +174,13 @@ th, td, tr, thead, .table-responsive{
 }
 
 .boton-numero{
-  width: 80px; 
-  height: 80px; 
+  width: 60px; 
+  height: 60px; 
   border-radius: 50px;
   border-color: #7E2CFF;
   background-color: #E9E0F6;
   color: #7E2CFF;
-  font-size: xx-large;
+  font-size: x-large;
 }
 
 .boton-numero:hover{
@@ -150,13 +198,13 @@ th, td, tr, thead, .table-responsive{
 }
 
 .boton-llamar{
-  width: 80px; 
-  height: 80px; 
+  width: 60px; 
+  height: 60px; 
   border-radius: 50px;
   border-color: #26DD8E;
   background-color: #E9FCF3;
   color: #26DD8E;
-  font-size: xx-large;
+  font-size: x-large;
 }
 
 .boton-llamar:hover{
@@ -174,13 +222,13 @@ th, td, tr, thead, .table-responsive{
 }
 
 .boton-colgar{
-  width: 80px; 
-  height: 80px; 
+  width: 60px; 
+  height: 60px; 
   border-radius: 50px;
   border-color: #FF3833;
   background-color: #FFEAEA;
   color: #FF3833;
-  font-size: xx-large;
+  font-size: x-large;
 }
 
 .boton-colgar:hover{
@@ -337,3 +385,6 @@ th, td, tr, thead, .table-responsive{
   text-align: end;
 }
 
+.col-md-2{
+  flex: 0 0 12%;
+}

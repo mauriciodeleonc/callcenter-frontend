@@ -6,7 +6,7 @@ import { faHeadset, faPause, faPhoneSlash } from '@fortawesome/free-solid-svg-ic
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import io from 'socket.io-client';
 import LoginRedirect from './LoginRedirect';
-let socket = io('https://callcenter-backend.herokuapp.com/');
+let socket = io('https://callcenter-backend.herokuapp.com');
 socket = io.connect();
 
 class Supervision extends React.Component{
@@ -185,7 +185,7 @@ class Supervision extends React.Component{
                 {(this.props.usuario === 'supervisor') ?
                 <>
                 <h1>{(this.props.match.params.nombre.split('+')[0]).charAt(0).toUpperCase() + (this.props.match.params.nombre.split('+')[0]).slice(1)}</h1>
-                <Table striped hover responsive className='user-table'>
+                <Table striped hover responsive >
                     <thead>
                         <tr>
                             <th>Nombre</th>

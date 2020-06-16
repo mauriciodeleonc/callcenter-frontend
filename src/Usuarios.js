@@ -446,7 +446,7 @@ class Usuarios extends React.Component{
                   >
                     Agregar nuevo usuario
                   </Button>
-                  <Table striped hover responsive className='user-table'>
+                  <Table striped hover responsive>
                       <thead>
                           <tr>
                               <th>Nombre</th>

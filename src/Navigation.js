@@ -19,7 +19,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 class Navigation extends React.Component{
     render(){
         return(
-            <Navbar expand="lg">
+            <Navbar expand="lg" style={{position: 'sticky', top: 0}}>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="flex-column">
@@ -38,8 +38,8 @@ class Navigation extends React.Component{
                                         </Row>
                                     </li>
                                 </Link>
-                                <Form onSubmit={() => this.props.logOut()}>
-                                    <Button variant='danger'  type='submit' onClick={() => this.props.logOut()}>
+                                <Form onSubmit={() => this.props.logOut()} style={{marginTop: '82vh'}}>
+                                    <Button variant='danger'  type='submit' onClick={() => this.props.logOut()} block>
                                         Cerrar sesión
                                     </Button>
                                 </Form>
@@ -60,8 +60,8 @@ class Navigation extends React.Component{
                                         </Row>
                                     </li>
                                 </Link>
-                                <Form onSubmit={() => this.props.logOut()}>
-                                    <Button variant='danger'  type='submit' onClick={() => this.props.logOut()}>
+                                <Form onSubmit={() => this.props.logOut()} style={{marginTop: '82vh'}}>
+                                    <Button variant='danger'  type='submit' onClick={() => this.props.logOut()} block>
                                         Cerrar sesión
                                     </Button>
                                 </Form>
@@ -122,8 +122,8 @@ class Navigation extends React.Component{
                                     </li>
                                 </Link>
                                 <br />
-                                <Form onSubmit={() => this.props.logOut()}>
-                                    <Button variant='danger'  type='submit' onClick={() => this.props.logOut()}>
+                                <Form onSubmit={() => this.props.logOut()} style={{marginTop: '57vh'}}>
+                                    <Button variant='danger'  type='submit' onClick={() => this.props.logOut()} block>
                                         Cerrar sesión
                                     </Button>
                                 </Form>

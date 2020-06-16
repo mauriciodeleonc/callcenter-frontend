@@ -84,10 +84,10 @@ class Login extends React.Component{
                                             placeholder="Contraseña"
                                             required
                                         />
+                                        <div className="text-right mt-3">
+                                            <Button type='submit' onClick = {this.getEmpleado} className='boton-morado boton-login'>Iniciar sesión</Button>
+                                        </div>
                                     </Form.Group>
-                                    <div className="text-right">
-                                        <Button onClick = {this.getEmpleado} className='boton-morado boton-login'>Iniciar sesión</Button>
-                                    </div>
                                 </Form>
                             </Card.Body>
                         </Card>

@@ -4,6 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup'
 import Form from 'react-bootstrap/Form';
 import { 
     faPhoneAlt,
@@ -11,7 +12,8 @@ import {
     faBackspace,
     faHandPointer,
     faForward,
-    faPause
+    faPause,
+    faUserAlt
  } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Modal from 'react-bootstrap/Modal';
@@ -20,7 +22,7 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import lodash from 'lodash';
  
-let socket = io('https://callcenter-backend.herokuapp.com/');
+let socket = io('https://callcenter-backend.herokuapp.com');
 socket = io.connect();
 
 class EditarGestion extends React.Component {
@@ -56,7 +58,6 @@ class EditarGestion extends React.Component {
             //let fechaHoraGestion = new Date(Date.parse(this.state.today));
             let today = new Date();
             let fechaHoraGestion = today.toISOString().slice(0, 19).replace('T', ' ');
-            console.log(fechaHoraGestion);
             axios.post('/updateGestion', null, {
                 params: {
                     idGestion: this.props.cliente.cliente.gestiones[0][0].idGestion,
@@ -71,11 +72,9 @@ class EditarGestion extends React.Component {
                     codigoContacto: this.state.codigoContacto
                 }
             }).then(response => {
-                console.log(response.data[0]);
                 
                 if(this.state.fechaPromesa !== ''){
                     let fechaPromesa = this.state.fechaPromesa  + ' 00:00:00';
-                    console.log(fechaPromesa);
                     axios.post('/updatePromesa', null, {
                         params: {
                             idGestion: this.props.cliente.cliente.gestiones[0][0].idGestion,
@@ -126,7 +125,6 @@ class EditarGestion extends React.Component {
         if(this.state.comentario === '' || this.state.creditos.length === 0 || this.state.codigoAccion === '--' || this.state.codigoResultado === '--' || this.state.codigoContacto === '--'){
             alert('Revise que todos los campos han sido llenados correctamente');
         } else {
-            console.log(this.state);
             this.insertGestion();
             //Agregar reporte a la base de datos
             this.props.onHide();
@@ -164,7 +162,7 @@ class EditarGestion extends React.Component {
                                 />
                             </div>
                         ))}
-                        <p><b>Fecha: (mm-dd-aaaa)</b> {this.state.todayDate}</p>
+                        <p><b>Fecha:</b> {this.state.todayDate}</p>
                         <p><b>Hora:</b> {this.state.todayHour}</p>
                         <Form.Group controlId="comentario">
                             <Form.Label><b>Comentario:</b></Form.Label>
@@ -181,26 +179,33 @@ class EditarGestion extends React.Component {
                             <Form.Label><b>Código de Acción</b></Form.Label>
                             <Form.Control as="select" onChange={this.handleCodigoAccion} value={this.state.codigoAccion} required>
                                 <option>{this.state.codigoAccion}</option>
-                                <option>Llamada a casa</option>
-                                <option>Llamada a referencia</option>
-                                <option>Llamada a sucursal</option>
-                                <option>Llamada a laboral</option>
-                                <option>Llamada a celular</option>
-                                <option>Whatsapp chat</option>
+                                <option>Casa</option>
+                                <option>Celular</option>
+                                <option>Laboral</option>
+                                <option>Sucursal</option>
+                                <option>Ref 1</option>
+                                <option>Ref 2</option>
+                                <option>Ref 3</option>
+                                <option>Ref 4</option>
+                                <option>Ref 5</option>
+                                <option>Whatsapp</option>
+                                <option>Correo</option>
+                                <option>Visita Casa</option>
+                                <option>Visita Garantía</option>
+                                <option>Visita Laboral</option>
+                                <option>Visita Otro</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="exampleForm.ControlSelect1">
                             <Form.Label><b>Código de Resultado</b></Form.Label>
                             <Form.Control as="select" onChange={this.handleCodigoResultado} value={this.state.codigoResultado} required>
                                 <option>{this.state.codigoResultado}</option>
-                                <option>Aclaración</option>
-                                <option>Buzón</option>
-                                <option>Convenio de liquidación</option>
+                                <option>Contacto Indirecto</option>
+                                <option>Cónyugue</option>
+                                <option>Encargado de Pagos</option>
                                 <option>Familiar</option>
-                                <option>Fuera de servicio</option>
                                 <option>Hijo</option>
-                                <option>No contestan</option>
-                                <option>No existe</option>
+                                <option>No Contacto</option>
                                 <option>Padre</option>
                                 <option>Referencia</option>
                                 <option>Tercero</option>
@@ -211,27 +216,45 @@ class EditarGestion extends React.Component {
                             <Form.Label><b>Código de Contacto</b></Form.Label>
                             <Form.Control as="select" onChange={this.handleCodigoContacto} value={this.state.codigoContacto} required>
                                 <option>{this.state.codigoContacto}</option>
-                                <option>Cobro a destiempo</option>
-                                <option>Cobro de más</option>
-                                <option>Contacto no efectivo</option>
-                                <option>Desconoce ser referencia</option>
+                                <option>Aclaración</option>
+                                <option>Buzón</option>
+                                <option>Cargo Domiciliado</option>
+                                <option>Cargo No Realizado</option>
+                                <option>Crédito Liquidado</option>
+                                <option>Cuelga</option>
+                                <option>Defunción</option>
+                                <option>Desempleado</option>
+                                <option>Enfermedad</option>
+                                <option>Envio Carta de No Acuerdo</option>
+                                <option>Envio Convenio de Liquidación</option>
                                 <option>Evasivo</option>
-                                <option>Inconformidad con la domiciliación</option>
-                                <option>Interesado en Liquidar</option>
-                                <option>No conoce al titular</option>
-                                <option>No contacto</option>
-                                <option>Nuevos datos</option>
-                                <option>Pago no reflejado</option>
-                                <option>Pago recibido</option>
-                                <option>Promesa de pago</option>
-                                <option>Promesa incumplida</option>
-                                <option>Referencia sin información</option>
+                                <option>Fuera de Servicio</option>
+                                <option>Insolvente</option>
+                                <option>Interesado en Liq.</option>
+                                <option>Mensaje</option>
+                                <option>Negativa de Pago</option>
+                                <option>No Contestan</option>
+                                <option>No Existe</option>
+                                <option>No Labora Ahí</option>
+                                <option>No Lo Conocen</option>
+                                <option>No Vive Ahí</option>
+                                <option>Nuevos Datos</option>
+                                <option>Número Incompleto</option>
+                                <option>Promesa de Pago</option>
+                                <option>Promesa Rota</option>
+                                <option>Recado Fam</option>
+                                <option>Recado Ref</option>
                                 <option>Seguimiento a PP</option>
-                                <option>Sin recursos</option>
+                                <option>Sin Información</option>
+                                <option>Solicita Cargo</option>
+                                <option>Ya Pagó</option>
+                                <option>Abandonada</option>
+                                <option>Aviso Bajo Puerta</option>
+                                <option>Deshabitada</option>
                             </Form.Control>
                         </Form.Group>
                         {
-                            this.state.codigoContacto ===  'Promesa de pago' ? 
+                            this.state.codigoContacto ===  'Promesa de Pago' ? 
                             <>
                                 <Form.Group controlId="fechaPromesa">
                                     <Form.Label><b>Fecha de promesa:</b></Form.Label>
@@ -301,7 +324,6 @@ class GenerarReporte extends React.Component {
             //let fechaHoraGestion = new Date(Date.parse(this.state.today));
             
             let fechaHoraGestion = this.state.today.toISOString().slice(0, 19).replace('T', ' ');
-            console.log(fechaHoraGestion);
             axios.post('/insertGestion', null, {
                 params: {
                     idEmpleadoAsignado: this.props.idUsuarioAsignado,
@@ -315,11 +337,9 @@ class GenerarReporte extends React.Component {
                     codigoContacto: this.state.codigoContacto
                 }
             }).then(response => {
-                console.log(response.data[0]);
                 
                 if(this.state.fechaPromesa !== ''){
                     let fechaPromesa = this.state.fechaPromesa  + ' 00:00:00';
-                    console.log(fechaPromesa);
                     axios.post('/insertPromesa', null, {
                         params: {
                             idGestion: response.data[0][0].idGestion,
@@ -383,7 +403,6 @@ class GenerarReporte extends React.Component {
         if(this.state.comentario === '' || this.state.creditos.length === 0 || this.state.codigoAccion === '--' || this.state.codigoResultado === '--' || this.state.codigoContacto === '--'){
             alert('Revise que todos los campos han sido llenados correctamente');
         } else {
-            console.log(this.state);
             this.insertGestion();
             //Agregar reporte a la base de datos
             this.props.onHide();
@@ -420,7 +439,7 @@ class GenerarReporte extends React.Component {
                                 />
                             </div>
                         ))}
-                        <p><b>Fecha: (mm-dd-aaaa)</b> {this.state.todayDate}</p>
+                        <p><b>Fecha:</b> {this.state.todayDate}</p>
                         <p><b>Hora:</b> {this.state.todayHour}</p>
                         <Form.Group controlId="comentario">
                             <Form.Label><b>Comentario:</b></Form.Label>
@@ -437,26 +456,33 @@ class GenerarReporte extends React.Component {
                             <Form.Label><b>Código de Acción</b></Form.Label>
                             <Form.Control as="select" onChange={this.handleCodigoAccion} value={this.state.codigoAccion} required>
                                 <option>--</option>
-                                <option>Llamada a casa</option>
-                                <option>Llamada a referencia</option>
-                                <option>Llamada a sucursal</option>
-                                <option>Llamada a laboral</option>
-                                <option>Llamada a celular</option>
-                                <option>Whatsapp chat</option>
+                                <option>Casa</option>
+                                <option>Celular</option>
+                                <option>Laboral</option>
+                                <option>Sucursal</option>
+                                <option>Ref 1</option>
+                                <option>Ref 2</option>
+                                <option>Ref 3</option>
+                                <option>Ref 4</option>
+                                <option>Ref 5</option>
+                                <option>Whatsapp</option>
+                                <option>Correo</option>
+                                <option>Visita Casa</option>
+                                <option>Visita Garantía</option>
+                                <option>Visita Laboral</option>
+                                <option>Visita Otro</option>
                             </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="exampleForm.ControlSelect1">
                             <Form.Label><b>Código de Resultado</b></Form.Label>
                             <Form.Control as="select" onChange={this.handleCodigoResultado} value={this.state.codigoResultado} required>
                                 <option>--</option>
-                                <option>Aclaración</option>
-                                <option>Buzón</option>
-                                <option>Convenio de liquidación</option>
+                                <option>Contacto Indirecto</option>
+                                <option>Cónyugue</option>
+                                <option>Encargado de Pagos</option>
                                 <option>Familiar</option>
-                                <option>Fuera de servicio</option>
                                 <option>Hijo</option>
-                                <option>No contestan</option>
-                                <option>No existe</option>
+                                <option>No Contacto</option>
                                 <option>Padre</option>
                                 <option>Referencia</option>
                                 <option>Tercero</option>
@@ -467,27 +493,45 @@ class GenerarReporte extends React.Component {
                             <Form.Label><b>Código de Contacto</b></Form.Label>
                             <Form.Control as="select" onChange={this.handleCodigoContacto} value={this.state.codigoContacto} required>
                                 <option>--</option>
-                                <option>Cobro a destiempo</option>
-                                <option>Cobro de más</option>
-                                <option>Contacto no efectivo</option>
-                                <option>Desconoce ser referencia</option>
+                                <option>Aclaración</option>
+                                <option>Buzón</option>
+                                <option>Cargo Domiciliado</option>
+                                <option>Cargo No Realizado</option>
+                                <option>Crédito Liquidado</option>
+                                <option>Cuelga</option>
+                                <option>Defunción</option>
+                                <option>Desempleado</option>
+                                <option>Enfermedad</option>
+                                <option>Envio Carta de No Acuerdo</option>
+                                <option>Envio Convenio de Liquidación</option>
                                 <option>Evasivo</option>
-                                <option>Inconformidad con la domiciliación</option>
-                                <option>Interesado en Liquidar</option>
-                                <option>No conoce al titular</option>
-                                <option>No contacto</option>
-                                <option>Nuevos datos</option>
-                                <option>Pago no reflejado</option>
-                                <option>Pago recibido</option>
-                                <option>Promesa de pago</option>
-                                <option>Promesa incumplida</option>
-                                <option>Referencia sin información</option>
+                                <option>Fuera de Servicio</option>
+                                <option>Insolvente</option>
+                                <option>Interesado en Liq.</option>
+                                <option>Mensaje</option>
+                                <option>Negativa de Pago</option>
+                                <option>No Contestan</option>
+                                <option>No Existe</option>
+                                <option>No Labora Ahí</option>
+                                <option>No Lo Conocen</option>
+                                <option>No Vive Ahí</option>
+                                <option>Nuevos Datos</option>
+                                <option>Número Incompleto</option>
+                                <option>Promesa de Pago</option>
+                                <option>Promesa Rota</option>
+                                <option>Recado Fam</option>
+                                <option>Recado Ref</option>
                                 <option>Seguimiento a PP</option>
-                                <option>Sin recursos</option>
+                                <option>Sin Información</option>
+                                <option>Solicita Cargo</option>
+                                <option>Ya Pagó</option>
+                                <option>Abandonada</option>
+                                <option>Aviso Bajo Puerta</option>
+                                <option>Deshabitada</option>
                             </Form.Control>
                         </Form.Group>
                         {
-                            this.state.codigoContacto ===  'Promesa de pago' ? 
+                            this.state.codigoContacto ===  'Promesa de Pago' ? 
                             <>
                                 <Form.Group controlId="fechaPromesa">
                                     <Form.Label><b>Fecha de promesa:</b></Form.Label>
@@ -532,6 +576,7 @@ class Llamar extends React.Component{
             clientes: [],
             cliente: {},
             telefonoMarcar: '',
+            referenciaMarcar: '',
             segundosLamada: 0,
             minutosLlamada: 0,
             telefonoNuevo: '',
@@ -579,14 +624,18 @@ class Llamar extends React.Component{
                 idEmpleado: this.props.idUsuario
             }
         }).then(response => {
-            console.log(response.data[0][0].nombre);
             this.setState({
                 room: response.data[0][0].nombre
+            }, () => {
+                
+                socket.on('connect', () => {
+                    //socket.emit('room', response.data[0][0].nombre);
+                    console.log(response.data[0][0].nombre);
+                    socket.emit('room', this.state.room);
+                    
+                 });
             });
-            socket.on('connect', () => {
-                //socket.emit('room', response.data[0][0].nombre);
-                socket.emit('room', this.state.room);
-             });
+            
         });
     }
     
@@ -608,8 +657,6 @@ class Llamar extends React.Component{
                     telCelular: response.data.referencias[i].telCelular
                 }
             }
-            console.log(response);
-            console.log(referencias);
             let gestion = [];
             gestion[0] = response.data.gestion;
             this.setState({
@@ -695,7 +742,7 @@ class Llamar extends React.Component{
             }
             if(i >= response.data[0][0].length){
                 this.setState({renderReady: true, nombresClientes: Object.keys(this.state.clientes)});
-                //this.nextClient();
+                this.nextClient();
             }
         });
     }
@@ -705,10 +752,8 @@ class Llamar extends React.Component{
             this.setState({clienteReady: false});
             let clon = lodash.cloneDeep(this.state.nombresClientes);
             let nombreCliente = clon.shift();
-            //console.log(clon);
             let cliente = this.state.clientes[nombreCliente];
             this.setState({cliente: {cliente, nombre: nombreCliente}});
-            console.log(cliente);
             let telefonos = [];
             telefonos[0] = cliente.telCasa;
             telefonos[1] = cliente.telCelular;
@@ -871,7 +916,6 @@ class Llamar extends React.Component{
                 estadoEjecutivo: 'predictivo',
                 pressPredictivo: this.state.pressPredictivo + 1 
             }, () => {
-                console.log(this.state.estadoEjecutivo);
                 if(this.state.renderReady){
                     this.nextClient();
                 }
@@ -919,6 +963,7 @@ class Llamar extends React.Component{
                 room: this.state.room,
                 idUsuario: this.state.idUsuario
             });
+            this.nameInput.focus();
             //El valor de estado ejecutivo nos ayuda a
             //en supervisor quien esta en llamada, quien en pausa
             //y quien desconectado
@@ -989,22 +1034,24 @@ class Llamar extends React.Component{
                             <h1>Llamar</h1>
                             <Container fluid>
                                 <Row className='d-flex justify-content-between'>
-                                    <Col md={8} className='p-0'>
+                                    <Col md={9} className='pl-0' style={{borderRightColor: 'rgba(0,0,0,.1)', borderRightStyle: 'solid', borderRightWidth: 'thin'}}>
                                         {this.state.estadoEjecutivo === 'manual' &&
                                         <Form onSubmit={this.buscarCliente}>
-                                            <Form.Group controlId="telefonoNuevo">
-                                                <Form.Label>Buscar cliente por número de crédito</Form.Label>
+                                            <Form.Label>Buscar cliente por número de crédito</Form.Label>
+                                            <InputGroup controlId="telefonoNuevo" style={{marginBottom: 20, width: '50%'}}>
                                                 <Form.Control 
                                                     type="number" 
                                                     value={this.state.clienteBuscar} 
                                                     onChange={this.handleClienteBuscar} 
-                                                    placeholder="Telefono"
+                                                    placeholder="Número de Crédito"
                                                     required
                                                 />
-                                                <Button variant="primary" type="submit" onClick={() => this.buscarCliente} block>
-                                                Buscar
-                                                </Button>
-                                            </Form.Group>
+                                                <InputGroup.Append>
+                                                    <Button variant="primary" type="submit" onClick={() => this.buscarCliente} className='input-group-append'>
+                                                        Buscar
+                                                    </Button>
+                                                </InputGroup.Append>
+                                            </InputGroup>
                                         </Form>
                                         }
                                         <h2>Datos del cliente</h2>
@@ -1013,7 +1060,7 @@ class Llamar extends React.Component{
                                                 <p className='mb-0'><b>Nombre</b></p>
                                                 <p>{this.state.clienteReady ? this.state.cliente.nombre : <></>}</p>
                                                 <p className='mb-2'><b>Cuentas</b></p>
-                                                <Table striped hover responsive className='comments-table'>
+                                                <Table striped hover responsive className='creditos-table'>
                                                     <thead>
                                                         <tr>
                                                             <th>Crédito</th>
@@ -1029,10 +1076,9 @@ class Llamar extends React.Component{
                                                     <tbody>
                                                         { (this.state.clienteReady && this.state.cliente.cliente) ? 
                                                             <>
-                                                            {console.log(this.state.cliente)}
                                                             {this.state.cliente.cliente.creditos.map(credito => {
                                                                 let fechaUltimoPago = new Date(Date.parse(credito.fechaUltimoPago));
-                                                                fechaUltimoPago = (fechaUltimoPago.getMonth() + 1) + "-" + fechaUltimoPago.getDate() + "-" + fechaUltimoPago.getFullYear();
+                                                                fechaUltimoPago = fechaUltimoPago.getDate() + "/" + (fechaUltimoPago.getMonth() + 1) + "/" + fechaUltimoPago.getFullYear();
                                                                 return(
                                                                     <tr key={credito.numCredito}>
                                                                         <td>{credito.numCredito}</td>
@@ -1054,59 +1100,8 @@ class Llamar extends React.Component{
                                                         }
                                                     </tbody>
                                                 </Table>
-                                                <p className='mb-2'><b>Gestiones Anteriores:</b></p>
-                                                <Table striped hover responsive className='comments-table'>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Crédito</th>
-                                                            <th>Tel. Marcado</th>
-                                                            <th>Fecha (mm-dd-aa)</th>
-                                                            {/*<th>Gestor</th>
-                                                            <th>Contesto</th>*/}
-                                                            <th>Comentario</th>
-                                                            <th>c. Acción</th>
-                                                            <th>c. Resultado</th>
-                                                            <th>c. Contacto</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        { (this.state.clienteReady && this.state.cliente.cliente && this.state.cliente.cliente.gestiones) ? 
-                                                            this.state.cliente.cliente.gestiones[0].map(gestion => {
-                                                                let fechaGestionCompleta = new Date(Date.parse(gestion.fechaHoraGestion));
-                                                                let fechaGestion = (fechaGestionCompleta.getMonth() + 1) + "-" + fechaGestionCompleta.getDate() + "-" + fechaGestionCompleta.getFullYear();
-                                                                return(
-                                                                    <tr key={gestion.idGestion}>
-                                                                        <td>{gestion.numCredito}</td>
-                                                                        <td>{gestion.numeroContacto}</td>
-                                                                        <td>{fechaGestion}</td>
-                                                                        {/*<td>{gestion.empleadoAsignado}</td>
-                                                                        <td>{gestion.nombreMarcado}</td>*/}
-                                                                        <td>{gestion.comentarios}</td>
-                                                                        <td>{gestion.codigoAccion}</td>
-                                                                        <td>{gestion.codigoResultado}</td>
-                                                                        <td>{gestion.codigoContacto}</td>
-                                                                    </tr>
-                                                                );
-                                                            })
-                                                            :
-                                                            <>
-                                                            </>
-                                                        }
-                                                    </tbody>
-                                                </Table>
-                                                {(this.state.estadoEjecutivo === 'manual' && this.state.cliente.cliente) &&
-                                                <Button 
-                                                    className='boton-morado' 
-                                                    onClick={() => this.setState({modalEditarShow: true})}
-                                                    style={{
-                                                    margin: '10px 0 30px 0'
-                                                    }}
-                                                >
-                                                    Editar última gestión de cliente
-                                                </Button>
-                                                }
                                             </Col>
-                                            <Col md={3}>
+                                            <Col md={4}>
                                                 <p className='mb-2'><b>Teléfonos:</b></p>
                                                 <Table striped hover responsive className='phones-table'>
                                                     <thead>
@@ -1117,13 +1112,13 @@ class Llamar extends React.Component{
                                                     </thead>
                                                     <tbody>
                                                         { (this.state.clienteReady && this.state.cliente.cliente && this.state.cliente.cliente.telCasa != 'null') &&
-                                                            <tr>
+                                                            <tr onClick={() => this.setState({telefonoMarcar: this.state.cliente.cliente.telCasa, referenciaMarcar: 'Casa Propietario'})}>
                                                                 <td>{(this.state.clienteReady && this.state.cliente.cliente) ? this.state.cliente.cliente.telCasa : <></>}</td>
                                                                 <td>Casa propietario</td>
                                                             </tr>
                                                         }
                                                         { (this.state.clienteReady && this.state.cliente.cliente && this.state.cliente.cliente.telCelular != 'null') &&
-                                                            <tr>
+                                                            <tr onClick={() => this.setState({telefonoMarcar: this.state.cliente.cliente.telCelular, referenciaMarcar: 'Celular Propietario'})}>
                                                                 <td>{(this.state.clienteReady && this.state.cliente.cliente) ? this.state.cliente.cliente.telCelular : <></>}</td>
                                                                 <td>Celular propietario</td>
                                                             </tr>
@@ -1133,16 +1128,16 @@ class Llamar extends React.Component{
                                                                 return(
                                                                     <>
                                                                         { this.state.cliente.cliente.referencias[referencia].telCasa != 'null' &&
-                                                                        <tr key={this.state.cliente.cliente.referencias[referencia].telCasa}>
-                                                                            <td>{this.state.cliente.cliente.referencias[referencia].telCasa}</td>
-                                                                            <td>{referencia}</td>
-                                                                        </tr>
+                                                                            <tr key={this.state.cliente.cliente.referencias[referencia].telCasa} onClick={() => this.setState({telefonoMarcar: this.state.cliente.cliente.referencias[referencia].telCasa, referenciaMarcar: referencia})}>
+                                                                                <td>{this.state.cliente.cliente.referencias[referencia].telCasa}</td>
+                                                                                <td>{referencia}</td>
+                                                                            </tr>
                                                                         }
                                                                         {this.state.cliente.cliente.referencias[referencia].telCelular != 'null' &&
-                                                                        <tr key={this.state.cliente.cliente.referencias[referencia].telCelular}>
-                                                                            <td>{this.state.cliente.cliente.referencias[referencia].telCelular}</td>
-                                                                            <td>{referencia}</td>
-                                                                        </tr>
+                                                                            <tr key={this.state.cliente.cliente.referencias[referencia].telCelular} onClick={() => this.setState({telefonoMarcar: this.state.cliente.cliente.referencias[referencia].telCelular, referenciaMarcar: referencia})}>
+                                                                                <td>{this.state.cliente.cliente.referencias[referencia].telCelular}</td>
+                                                                                <td>{referencia}</td>
+                                                                            </tr>
                                                                         }
                                                                     </>
                                                                 );
@@ -1181,14 +1176,85 @@ class Llamar extends React.Component{
                                                 }
                                             </Col>
                                         </Row>
-                                    </Col>
-                                    <Col md={3}>
                                         <Row>
+                                            <Col md={12}>
+                                            <p className='mb-2'><b>Gestiones Anteriores:</b></p>
+                                                <Table striped hover responsive className='gestiones-table'>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Crédito</th>
+                                                            <th>Tel. Marcado</th>
+                                                            <th>Fecha</th>
+                                                            {/*<th>Gestor</th>
+                                                            <th>Contesto</th>*/}
+                                                            <th>Comentario</th>
+                                                            <th>c. Acción</th>
+                                                            <th>c. Resultado</th>
+                                                            <th>c. Contacto</th>
+                                                            <th>Fecha PP.</th>
+                                                            <th>Monto PP.</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        { (this.state.clienteReady && this.state.cliente.cliente && this.state.cliente.cliente.gestiones) ? 
+                                                            this.state.cliente.cliente.gestiones[0].map(gestion => {
+                                                                console.log(this.state.cliente.cliente.gestiones[0]);
+                                                                let fechaGestionCompleta = new Date(Date.parse(gestion.fechaHoraGestion));
+                                                                let fechaGestion =  fechaGestionCompleta.getDate() + "/" + (fechaGestionCompleta.getMonth() + 1) + "/" + fechaGestionCompleta.getFullYear();
+
+                                                                let fechaPromesaCompleta = new Date(Date.parse(gestion.fechaPromesa));
+                                                                let fechaPromesa = fechaPromesaCompleta.getDate() + "/" + (fechaPromesaCompleta.getMonth() + 1) + "/" + fechaPromesaCompleta.getFullYear();
+                                                                console.log(fechaPromesa);
+                                                                
+                                                                return(
+                                                                    <tr key={gestion.idGestion}>
+                                                                        <td>{gestion.numCredito}</td>
+                                                                        <td>{gestion.numeroContacto}</td>
+                                                                        <td>{fechaGestion}</td>
+                                                                        {/*<td>{gestion.empleadoAsignado}</td>
+                                                                        <td>{gestion.nombreMarcado}</td>*/}
+                                                                        <td>{gestion.comentarios}</td>
+                                                                        <td>{gestion.codigoAccion}</td>
+                                                                        <td>{gestion.codigoResultado}</td>
+                                                                        <td>{gestion.codigoContacto}</td>
+                                                                        <td>{fechaPromesa == 'NaN/NaN/NaN' ? '' : fechaPromesa}</td>
+                                                                        <td>{gestion.monto}</td>
+                                                                    </tr>
+                                                                );
+                                                            })
+                                                            :
+                                                            <>
+                                                            </>
+                                                        }
+                                                    </tbody>
+                                                </Table>
+                                                {(this.state.estadoEjecutivo === 'manual' && this.state.cliente.cliente) &&
+                                                <Button 
+                                                    className='boton-morado' 
+                                                    onClick={() => this.setState({modalEditarShow: true})}
+                                                    style={{
+                                                    margin: '10px 0 30px 0'
+                                                    }}
+                                                >
+                                                    Editar última gestión de cliente
+                                                </Button>
+                                                }
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                    <Col md={3} className='pl-5 pr-0'>
+                                        <div style={{position: 'sticky', top: '10%'}}>
+                                        <Row style={{marginBottom: 10}}>
                                             <Col 
                                                 md={12} 
                                                 style={{display: 'inline-block'}}
                                                 className='d-flex justify-content-center'
                                             >
+                                                <FontAwesomeIcon 
+                                                    icon={faPhoneAlt} 
+                                                    size='lg' 
+                                                    style={{marginTop: 10, marginRight: 5}}
+                                                />
                                                 <input
                                                     onChange={this.handleTelefonoMarcar}
                                                     value={this.state.telefonoMarcar}
@@ -1198,36 +1264,49 @@ class Llamar extends React.Component{
                                                     style={{
                                                         fontSize: 'x-large',
                                                         color: '#2F2F2F',
-                                                        borderStyle: 'none',
+                                                        borderStyle: 'solid',
                                                         backgroundColor: 'transparent',
                                                         fontWeight: 'bold',
                                                         width: '200px',
+                                                        borderTop: 'none',
+                                                        borderLeft: 'none',
+                                                        borderRight: 'none',
+                                                        textAlign: 'center'
                                                     }}
+                                                    ref={(input) => { this.nameInput = input; }} 
                                                 />
-                                                <FontAwesomeIcon 
+                                                {/*<FontAwesomeIcon 
                                                     icon={faBackspace} 
                                                     size='lg' 
                                                     onClick={() => this.setState({telefonoMarcar: this.state.telefonoMarcar.slice(0, -1)})} 
                                                     style={{marginTop: 8}}
-                                                />
+                                                />*/}
                                             </Col>
                                         </Row>
-                                        <Row style={{marginBottom: '30px'}}>
+                                        <Row style={{marginBottom: 10}}>
+                                            <Col 
+                                                md={12} 
+                                                style={{display: 'inline-block'}}
+                                                className='d-flex justify-content-center'
+                                            >
+                                                <FontAwesomeIcon 
+                                                    icon={faUserAlt} 
+                                                    size='lg' 
+                                                    style={{marginTop: 8, marginRight: 5}}
+                                                />
+                                                <p className='text-center'><b>{this.state.referenciaMarcar}</b></p>
+                                            </Col>
+                                        </Row>
+                                        <Row style={{marginBottom: 10}}>
                                             <Col>
                                                 <p style={{textAlign: 'center'}}>
                                                     Tiempo de llamada: {this.state.minutosLlamada}m {this.state.segundosLamada}s
                                                 </p>      
                                             </Col>
                                         </Row>
-                                        <Row style={{marginBottom: '15px'}}>
+                                        <Row style={{marginBottom: '20px'}}>
                                             <Col className='text-center'>
-                                                <Button 
-                                                    className='boton-numero' 
-                                                    onClick={() => this.handleNumeroTelefono('1')}
-                                                    disabled={this.state.marcarDisabled}
-                                                >
-                                                        1
-                                                </Button>
+                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('1')} disabled={this.state.marcarDisabled}>1</Button>
                                             </Col>
                                             <Col className='text-center'>
                                                 <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('2')} disabled={this.state.marcarDisabled}>2</Button>
@@ -1236,7 +1315,7 @@ class Llamar extends React.Component{
                                                 <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('3')} disabled={this.state.marcarDisabled}>3</Button>
                                             </Col>
                                         </Row>
-                                        <Row style={{marginBottom: '15px'}}>
+                                        <Row style={{marginBottom: '20px'}}>
                                             <Col className='text-center'>
                                                 <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('4')} disabled={this.state.marcarDisabled}>4</Button>
                                             </Col>
@@ -1247,7 +1326,7 @@ class Llamar extends React.Component{
                                                 <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('6')} disabled={this.state.marcarDisabled}>6</Button>
                                             </Col>
                                         </Row>
-                                        <Row style={{marginBottom: '15px'}}>
+                                        <Row style={{marginBottom: '20px'}}>
                                             <Col className='text-center'>
                                                 <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('7')} disabled={this.state.marcarDisabled}>7</Button>
                                             </Col>
@@ -1258,7 +1337,7 @@ class Llamar extends React.Component{
                                                 <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('9')} disabled={this.state.marcarDisabled}>9</Button>
                                             </Col>
                                         </Row>
-                                        <Row style={{marginBottom: '15px'}}>
+                                        <Row style={{marginBottom: '20px'}}>
                                             <Col className='text-center'>
                                                 <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('0')} disabled={this.state.marcarDisabled}>0</Button>
                                             </Col>
@@ -1295,6 +1374,7 @@ class Llamar extends React.Component{
                                                 <p>Pausa</p>
                                             </Col>
                                         </Row>
+                                        </div>
                                     </Col>
                                 </Row>
                                 { (this.state.clienteReady && this.state.cliente.cliente) &&

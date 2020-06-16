@@ -108,7 +108,7 @@ class Reporte extends React.Component{
 
     render(){
         let today = new Date();
-        let date = today.getDate() + '-' +(today.getMonth() + 1) + '-' + today.getFullYear() + '-' + today.getHours() + '-' + today.getMinutes();
+        let date = today.getDate() + '/' +(today.getMonth() + 1) + '/' + today.getFullYear() + '/' + today.getHours() + '-' + today.getMinutes();
         let fileName = (this.props.match.params.nombre.split('+')[0]).charAt(0).toUpperCase() + (this.props.match.params.nombre.split('+')[0]).slice(1) + '-' + date;
         console.log(this.state);
         return(
@@ -134,7 +134,7 @@ class Reporte extends React.Component{
                         <ExcelColumn label="Monto PP" value="monto"/>
                     </ExcelSheet>
                 </ExcelFile>
-                <Table striped hover responsive className='user-table'>
+                <Table striped hover responsive className='cartera-table'>
                     <thead>
                         <tr>
                             <th>Producto</th>
@@ -156,10 +156,10 @@ class Reporte extends React.Component{
                     <tbody>
                         {Object.keys(this.state.gestiones).map((gestion) => {
                             let fechaGestionCompleta = new Date(Date.parse(this.state.gestiones[gestion].fechaHoraGestion));
-                            let fechaGestion = (fechaGestionCompleta.getMonth() + 1) + "-" + fechaGestionCompleta.getDate() + "-" + fechaGestionCompleta.getFullYear();
+                            let fechaGestion = fechaGestionCompleta.getDate() + "/" + (fechaGestionCompleta.getMonth() + 1) + "/" + fechaGestionCompleta.getFullYear();
                             let tiempoGestion = fechaGestionCompleta.getHours() + ":" + fechaGestionCompleta.getMinutes() + ":" + fechaGestionCompleta.getSeconds()
                             let fechaPromesa = new Date(Date.parse(this.state.gestiones[gestion].fechaPromesa));
-                            fechaPromesa = (fechaPromesa.getMonth() + 1) + "-" + fechaPromesa.getDate() + "-" + fechaPromesa.getFullYear();
+                            fechaPromesa = fechaPromesa.getDate() + "/" + (fechaPromesa.getMonth() + 1) + "/" + fechaPromesa.getFullYear();
                             
                             return(
                                 <tr key={this.state.gestiones[gestion].idGestion}>
