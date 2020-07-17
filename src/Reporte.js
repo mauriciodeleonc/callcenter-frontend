@@ -28,7 +28,6 @@ class Reporte extends React.Component{
         this.handleExcel = this.handleExcel.bind(this);
         this.handleAgregarGestiones = this.handleAgregarGestiones.bind(this);
         this.handleFileChosen = this.handleFileChosen.bind(this);
-        this.insertGestion = this.insertGestion.bind(this);
     }
 
     getGestiones(idProducto){
@@ -110,8 +109,6 @@ class Reporte extends React.Component{
     }
 
     handleFileChosen(file){
-        let datosCliente;
-        let idProducto = parseInt(this.props.match.params.nombre.split('+')[1]);
        //console.log(typeof idProducto);
         readXlsxFile(file).then((rows) => {
             console.log(rows);
