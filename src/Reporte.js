@@ -2,6 +2,7 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import axios from 'axios';
+import readXlsxFile from 'read-excel-file';
 import LoginRedirect from './LoginRedirect';
 
 
@@ -16,12 +17,17 @@ class Reporte extends React.Component{
         super(props);
         this.state = {
             gestiones: {},
-            fileName: ''
+            fileName: '',
+            excel: ''
         }
 
         this.getGestiones = this.getGestiones.bind(this);
         this.updateTime = this.updateTime.bind(this);
         this.parseISOString = this.parseISOString.bind(this);
+        this.handleExcel = this.handleExcel.bind(this);
+        this.handleAgregarGestiones = this.handleAgregarGestiones.bind(this);
+        this.handleFileChosen = this.handleFileChosen.bind(this);
+        this.insertGestion = this.insertGestion.bind(this);
     }
 
     getGestiones(idProducto){
@@ -94,6 +100,92 @@ class Reporte extends React.Component{
         });
     }
 
+    handleExcel(event){this.setState({excel: event.target.files[0]});}
+
+    handleAgregarGestiones(event){
+        event.preventDefault();
+        //console.log(this.state.excel);
+        this.handleFileChosen(this.state.excel);
+    }
+
+    handleFileChosen(file){
+        let datosCliente;
+        let idProducto = parseInt(this.props.match.params.nombre.split('+')[1]);
+       //console.log(typeof idProducto);
+        readXlsxFile(file).then((rows) => {
+            console.log(rows);
+            for(let i = 1; i < rows.length; i++){
+                let ejecutivo = rows[i][0];
+                if(ejecutivo === null){
+                    ejecutivo = 'null';
+                } else if(ejecutivo === '#N/A'){
+                    ejecutivo = 'MARCO';
+                } else {
+                    ejecutivo = ejecutivo.toString();
+                }
+
+                let fechaGestion = rows[i][2];
+                fechaGestion = fechaGestion.getFullYear() + "-" + (fechaGestion.getMonth() + 1) + "-" + fechaGestion.getDate();
+
+                let credito = rows[i][3];
+                
+                /*
+                let nombreCliente = rows[i][4];
+                if(nombreCliente === null){
+                    nombreCliente = 'null';
+                } else if(nombreCliente === '#N/A'){
+                    nombreCliente = '-';
+                } else {
+                    nombreCliente = ejecutivo.toString();
+                }*/
+
+                let telMarcado = rows[i][10];
+
+                let codigoAccion = rows[i][11];
+                let codigoContacto = rows[i][12];
+                let codigoResultado = rows[i][13];
+                
+                let fechaPP = rows[i][14];
+                if(fechaPP === '' || fechaPP === null){
+                    fechaPP = '';
+                } else {
+                    fechaPP = fechaPP.getFullYear() + "-" + (fechaPP.getMonth() + 1) + "-" + fechaPP.getDate();
+                }
+
+                let montoPP = rows[i][15];
+                if(montoPP === '' || montoPP === null){
+                    montoPP = '';
+                }
+
+                let comentario = rows[i][15];
+
+                axios.post('/insertGestion', null, {
+                    params: {
+                        idEmpleadoAsignado: ejecutivo,
+                        idEmpleadoAtendido: ejecutivo,
+                        numCredito: parseInt(credito),
+                        fechaHoraGestion: fechaGestion,
+                        numeroContacto: telMarcado,
+                        comentarios: comentario,
+                        codigoAccion: codigoAccion,
+                        codigoResultado: codigoResultado,
+                        codigoContacto: codigoContacto
+                    }
+                }).then(response => {
+                    if(fechaPP !== ''){
+                        let fechaPromesa = fechaPP  + ' 00:00:00';
+                        axios.post('/insertPromesa', null, {
+                            params: {
+                                idGestion: response.data[0][0].idGestion,
+                                fechaPromesa: fechaPromesa,
+                                montoPromesa: parseFloat(montoPP)
+                            }
+                        })
+                    }
+                });
+            }
+        });
+    }
 
     componentDidMount(){
         let idProducto = this.props.match.params.nombre.split('+')[1];
@@ -134,6 +226,31 @@ class Reporte extends React.Component{
                         <ExcelColumn label="Monto PP" value="monto"/>
                     </ExcelSheet>
                 </ExcelFile>
+                <Form 
+                    onSubmit={this.handleAgregarGestiones}
+                    style={{
+                        borderStyle: 'dashed',
+                        borderColor: '#7E2CFF',
+                        maxWidth: '250px',
+                        padding: 10,
+                        marginBottom: 20,
+                        borderRadius: 5
+                    }}    
+                >
+                    <p className='h5'>Agregar Gestiones</p>
+                    <Form.Group controlId="gestion"> 
+                        <input 
+                            type = 'file'
+                            id = 'file'
+                            accept = '.xlsx'
+                            onChange = {this.handleExcel}
+                            required
+                        />
+                    </Form.Group>
+                    <Button className='boton-morado' type="submit" onClick={() => this.handleAgregarGestiones}>
+                        Agregar gestiones
+                    </Button>
+                </Form>
                 <Table striped hover responsive className='cartera-table'>
                     <thead>
                         <tr>
