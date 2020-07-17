@@ -158,7 +158,8 @@ class Carteras extends React.Component{
               idProducto: idProducto,
               nombre: cliente.nombre,
               telCasa: cliente.telCasa,
-              telCel: cliente.telCel
+              telCel: cliente.telCel,
+              rfc: cliente.rfc
             }
         });
         id = response.data[0][0].idCliente;
@@ -180,7 +181,8 @@ class Carteras extends React.Component{
               total: credito.total,
               liqActual: credito.liqActual,
               plazo: credito.plazo,
-              ultimoPago: credito.ultimoPago
+              ultimoPago: credito.ultimoPago,
+              frecuencia: credito.frecuencia
             }
         });
     }
@@ -201,7 +203,8 @@ class Carteras extends React.Component{
               calle: direccionCliente.calle,
               colonia: direccionCliente.colonia,
               municipio: direccionCliente.municipio,
-              estado: direccionCliente.estado
+              estado: direccionCliente.estado,
+              codigoPostal: direccionCliente.codigoPostal
             }
         });
     }
@@ -222,19 +225,20 @@ class Carteras extends React.Component{
         let referencia3;
         let referencia4;
         let referencia5;
-        datosEjecutivo = rows[i][3].toString().toLowerCase();
+        datosEjecutivo = rows[i][2].toString().toLowerCase();
         this.getIdEmpleado(datosEjecutivo).then(idEjecutivo =>{
             
             this.insertClienteEjecutivo(idCliente, idEjecutivo);
             direccionCliente = {
-                calle: rows[i][38].toString(),
-                colonia: rows[i][39].toString(),
-                municipio: rows[i][40].toString(),
-                estado: rows[i][41].toString()
+                calle: rows[i][37].toString(),
+                colonia: rows[i][38].toString(),
+                municipio: rows[i][39].toString(),
+                estado: rows[i][40].toString(),
+                codigoPostal: rows[i][41].toString()
             }
             this.insertDireccionCliente(idCliente, direccionCliente);
 
-            let bucket = rows[i][7];
+            let bucket = rows[i][6];
             bucket = bucket.split(" ");
 
             if(bucket[2] === '+') {
@@ -245,10 +249,10 @@ class Carteras extends React.Component{
                 bucketMax = parseInt(bucket[3]);
             }
 
-            let fechaOtorgado = rows[i][5];
+            let fechaOtorgado = rows[i][4];
             fechaOtorgado = fechaOtorgado.getFullYear() + "-" + (fechaOtorgado.getMonth() + 1) + "-" + fechaOtorgado.getDate();
 
-            let ultimoPago = rows[i][20];
+            let ultimoPago = rows[i][19];
             ultimoPago = ultimoPago.getFullYear() + "-" + (ultimoPago.getMonth() + 1) + "-" + ultimoPago.getDate();
 
             const estados = {
@@ -263,37 +267,38 @@ class Carteras extends React.Component{
             }
 
             datosCredito = {
-                numCredito: rows[i][2],
-                estado: estados[rows[i][0]],
+                numCredito: rows[i][0],
+                estado: estados[1],
                 fechaOtorgado: fechaOtorgado,
                 bucketMin: bucketMin,
                 bucketMax: bucketMax,
-                cuota: rows[i][8],
-                vencido: rows[i][9], 
-                vencidoCuota: rows[i][10],
-                total: rows[i][11],
-                liqActual: rows[i][12],
-                plazo: rows[i][17],
+                cuota: rows[i][7],
+                vencido: rows[i][8], 
+                vencidoCuota: rows[i][9],
+                total: rows[i][10],
+                liqActual: rows[i][11],
+                frecuencia: rows[i][12],
+                plazo: rows[i][16],
                 ultimoPago: ultimoPago
             }
 
             this.insertDatosCredito(idCliente, datosCredito);
 
-            nombreReferencia = rows[i][23];
+            nombreReferencia = rows[i][22];
             if(nombreReferencia === null){
                 nombreReferencia = 'null';
             } else  {
                 nombreReferencia = nombreReferencia.toString();
             }
 
-            telCasaReferencia = rows[i][24];
+            telCasaReferencia = rows[i][23];
             if(telCasaReferencia === null){
                 telCasaReferencia = 'null';
             } else  {
                 telCasaReferencia = telCasaReferencia.toString();
             }
 
-            telCelReferencia = rows[i][25];
+            telCelReferencia = rows[i][24];
             if(telCelReferencia === null){
                 telCelReferencia = 'null';
             } else  {
@@ -307,21 +312,21 @@ class Carteras extends React.Component{
             }
             this.insertReferencia(idCliente, referencia1);
 
-            nombreReferencia = rows[i][26];
+            nombreReferencia = rows[i][25];
             if(nombreReferencia === null){
                 nombreReferencia = 'null';
             } else  {
                 nombreReferencia = nombreReferencia.toString();
             }
 
-            telCasaReferencia = rows[i][27];
+            telCasaReferencia = rows[i][26];
             if(telCasaReferencia === null){
                 telCasaReferencia = 'null';
             } else  {
                 telCasaReferencia = telCasaReferencia.toString();
             }
 
-            telCelReferencia = rows[i][28];
+            telCelReferencia = rows[i][27];
             if(telCelReferencia === null){
                 telCelReferencia = 'null';
             } else  {
@@ -335,21 +340,21 @@ class Carteras extends React.Component{
             }
             this.insertReferencia(idCliente, referencia2);
 
-            nombreReferencia = rows[i][29];
+            nombreReferencia = rows[i][28];
             if(nombreReferencia === null){
                 nombreReferencia = 'null';
             } else  {
                 nombreReferencia = nombreReferencia.toString();
             }
 
-            telCasaReferencia = rows[i][30];
+            telCasaReferencia = rows[i][29];
             if(telCasaReferencia === null){
                 telCasaReferencia = 'null';
             } else  {
                 telCasaReferencia = telCasaReferencia.toString();
             }
 
-            telCelReferencia = rows[i][31];
+            telCelReferencia = rows[i][30];
             if(telCelReferencia === null){
                 telCelReferencia = 'null';
             } else  {
@@ -363,21 +368,21 @@ class Carteras extends React.Component{
             }
             this.insertReferencia(idCliente, referencia3);
 
-            nombreReferencia = rows[i][32];
+            nombreReferencia = rows[i][31];
             if(nombreReferencia === null){
                 nombreReferencia = 'null';
             } else  {
                 nombreReferencia = nombreReferencia.toString();
             }
 
-            telCasaReferencia = rows[i][33];
+            telCasaReferencia = rows[i][32];
             if(telCasaReferencia === null){
                 telCasaReferencia = 'null';
             } else  {
                 telCasaReferencia = telCasaReferencia.toString();
             }
 
-            telCelReferencia = rows[i][34];
+            telCelReferencia = rows[i][32];
             if(telCelReferencia === null){
                 telCelReferencia = 'null';
             } else  {
@@ -391,21 +396,21 @@ class Carteras extends React.Component{
             }
             this.insertReferencia(idCliente, referencia4);
 
-            nombreReferencia = rows[i][35];
+            nombreReferencia = rows[i][34];
             if(nombreReferencia === null){
                 nombreReferencia = 'null';
             } else  {
                 nombreReferencia = nombreReferencia.toString();
             }
 
-            telCasaReferencia = rows[i][36];
+            telCasaReferencia = rows[i][35];
             if(telCasaReferencia === null){
                 telCasaReferencia = 'null';
             } else  {
                 telCasaReferencia = telCasaReferencia.toString();
             }
 
-            telCelReferencia = rows[i][37];
+            telCelReferencia = rows[i][36];
             if(telCelReferencia === null){
                 telCelReferencia = 'null';
             } else  {
@@ -431,31 +436,39 @@ class Carteras extends React.Component{
             idProducto = await this.insertProducto(titulo);
             for(let i = 1; i < rows.length; i++){
 
-                let nombreCliente = rows[i][6];
+                let nombreCliente = rows[i][5];
                 if(nombreCliente === null){
                     nombreCliente = 'null';
                 } else  {
                     nombreCliente = nombreCliente.toString();
                 }
 
-                let telCasaCliente = rows[i][21];
+                let telCasaCliente = rows[i][20];
                 if(telCasaCliente === null){
                     telCasaCliente = 'null';
                 } else  {
                     telCasaCliente = telCasaCliente.toString();
                 }
 
-                let telCelCliente = rows[i][22];
+                let telCelCliente = rows[i][21];
                 if(telCelCliente === null){
                     telCelCliente = 'null';
                 } else  {
                     telCelCliente = telCelCliente.toString();
                 }
 
+                let rfc = rows[i][42];
+                if(rfc === null){
+                    rfc = 'null';
+                } else  {
+                    rfc = rfc.toString();
+                }
+
                 datosCliente = {
                     nombre: nombreCliente,
                     telCasa: telCasaCliente,
-                    telCel: telCelCliente
+                    telCel: telCelCliente,
+                    rfc: rfc
                 }
                 this.insertDatosCliente(idProducto, datosCliente).then(idCliente => {
                     

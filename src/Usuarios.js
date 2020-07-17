@@ -394,7 +394,7 @@ class Usuarios extends React.Component{
     agregarUsuario(empleadoNuevo){
       axios.post('/insertEmpleado', null, {
         params: {
-          nombre: empleadoNuevo.nombre,
+          nombre: empleadoNuevo.nombre.toLowerCase(),
           rol: empleadoNuevo.rol,
           usuario: empleadoNuevo.usuario,
           contrasena: empleadoNuevo.contrasena, //Encriptar esta antes del desmadre
