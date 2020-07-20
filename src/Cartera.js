@@ -445,16 +445,18 @@ class Cartera extends React.Component{
                             <th>Estatus</th>
                             <th>No. Crédito</th>
                             <th>Nombre Cliente</th>
+                            <th>RFC</th>
                             <th>Tel. Casa</th>
                             <th>Tel. Celular</th>
                             <th>Fecha Otorgamiento</th>
                             <th>Bucket Min</th>
                             <th>Bucket Max</th>
                             <th>Cuota</th>
-                            <th>Vencido</th>
-                            <th>Vencido + Cuota</th>
+                            <th>Mejora</th>
+                            <th>Cura</th>
                             <th>Total</th>
                             <th>Liq. Actual</th>
+                            <th>Frecuencia</th>
                             <th>Plazo</th>
                             <th>Fecha Último Pago</th>
                             <th>Nombre Referencia</th>
@@ -464,6 +466,7 @@ class Cartera extends React.Component{
                             <th>Colonia</th>
                             <th>Municipio</th>
                             <th>Estado</th>
+                            <th>Código Postal</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -480,6 +483,7 @@ class Cartera extends React.Component{
                                     <td>{fila.estatus == 'null' ? '' : fila.estatus}</td>
                                     <td>{fila.numCredito == 'null' ? '' : fila.numCredito}</td>
                                     <td>{fila.nombreCliente == 'null' ? '' : fila.nombreCliente}</td>
+                                    <td>{fila.rfc == 'null' ? '' : fila.rfc}</td>
                                     <td>{fila.telCasaCliente == 'null' ? '' : fila.telCasaCliente}</td>
                                     <td>{fila.telCelularCliente == 'null' ? '' : fila.telCelularCliente}</td>
                                     <td>{fechaOtorgamiento == 'null' ? '' : fechaOtorgamiento}</td>
@@ -490,6 +494,7 @@ class Cartera extends React.Component{
                                     <td>{fila.vencidoCuota == 'null' ? '' : fila.vencidoCuota}</td>
                                     <td>{fila.total == 'null' ? '' : fila.total}</td>
                                     <td>{fila.liquidacionActual == 'null' ? '' : fila.liquidacionActual}</td>
+                                    <td>{fila.frecuencia == 'null' ? '' : fila.frecuencia}</td>
                                     <td>{fila.plazo == 'null' ? '' : fila.plazo}</td>
                                     <td>{ultimoPago == 'null' ? '' : ultimoPago}</td>
                                     <td>{fila.nombreReferencia == 'null' ? '' : fila.nombreReferencia}</td>
@@ -499,6 +504,7 @@ class Cartera extends React.Component{
                                     <td>{fila.colonia == 'null' ? '' : fila.colonia}</td>
                                     <td>{fila.municipio == 'null' ? '' : fila.municipio}</td>
                                     <td>{fila.estado == 'null' ? '' : fila.estado}</td>
+                                    <td>{fila.codigoPostal == 'null' ? '' : fila.codigoPostal}</td>
                                 </tr>
                             );
                         })}

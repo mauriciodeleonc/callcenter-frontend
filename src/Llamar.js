@@ -669,10 +669,12 @@ class Llamar extends React.Component{
                         telCelular: response.data.telCelular,
                         idCliente: response.data.idCliente,
                         creditos: response.data.credito,
+                        frecuencia: response.data.frecuencia,
                         referencias: referencias,
                         gestiones: gestion
                     },
-                    nombre: response.data.nombre
+                    nombre: response.data.nombre,
+                    rfc: response.data.rfc
                 },
             });
             this.setState({
@@ -680,6 +682,7 @@ class Llamar extends React.Component{
                 clienteReady: true
             });
         });
+        /* AQUI MERO ES MI MEQUETREFE, PONTE TRUCHA GUAPETON*/
     }
 
     getInfoClientes(idEmpleado){
@@ -1059,6 +1062,7 @@ class Llamar extends React.Component{
                                             <Col md={8}>
                                                 <p className='mb-0'><b>Nombre</b></p>
                                                 <p>{this.state.clienteReady ? this.state.cliente.nombre : <></>}</p>
+                                                <p>{this.state.clienteReady ? this.state.cliente.rfc : <></>}</p>
                                                 <p className='mb-2'><b>Cuentas</b></p>
                                                 <Table striped hover responsive className='creditos-table'>
                                                     <thead>
@@ -1071,6 +1075,7 @@ class Llamar extends React.Component{
                                                             <th>Vencido + Cuota</th>
                                                             <th>Total</th>
                                                             <th>Liquidación Actual</th>
+                                                            <th>Frecuencia</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -1089,6 +1094,7 @@ class Llamar extends React.Component{
                                                                         <td>{credito.vencidoCuota}</td>
                                                                         <td>{credito.total}</td>
                                                                         <td>{credito.liquidacionActual}</td>
+                                                                        <td>{credito.frecuencia}</td>
                                                                     </tr>
                                                                 );
                                                             })
