@@ -157,29 +157,33 @@ class Reporte extends React.Component{
 
                 let comentario = rows[i][15];
 
-                axios.post('/insertGestion', null, {
-                    params: {
-                        idEmpleadoAsignado: ejecutivo,
-                        idEmpleadoAtendido: ejecutivo,
-                        numCredito: parseInt(credito),
-                        fechaHoraGestion: fechaGestion,
-                        numeroContacto: telMarcado,
-                        comentarios: comentario,
-                        codigoAccion: codigoAccion,
-                        codigoResultado: codigoResultado,
-                        codigoContacto: codigoContacto
-                    }
+                axios.get('/getIdEmpleado', {
+                    params: {usuario: ejecutivo}
                 }).then(response => {
-                    if(fechaPP !== ''){
-                        let fechaPromesa = fechaPP  + ' 00:00:00';
-                        axios.post('/insertPromesa', null, {
-                            params: {
-                                idGestion: response.data[0][0].idGestion,
-                                fechaPromesa: fechaPromesa,
-                                montoPromesa: parseFloat(montoPP)
-                            }
-                        })
-                    }
+                    axios.post('/insertGestion', null, {
+                        params: {
+                            idEmpleadoAsignado: response.data[0][0].idEmpleado,
+                            idEmpleadoAtendido: response.data[0][0].idEmpleado,
+                            numCredito: parseInt(credito),
+                            fechaHoraGestion: fechaGestion,
+                            numeroContacto: telMarcado,
+                            comentarios: comentario,
+                            codigoAccion: codigoAccion,
+                            codigoResultado: codigoResultado,
+                            codigoContacto: codigoContacto
+                        }
+                    }).then(response => {
+                        if(fechaPP !== ''){
+                            let fechaPromesa = fechaPP  + ' 00:00:00';
+                            axios.post('/insertPromesa', null, {
+                                params: {
+                                    idGestion: response.data[0][0].idGestion,
+                                    fechaPromesa: fechaPromesa,
+                                    montoPromesa: parseFloat(montoPP)
+                                }
+                            })
+                        }
+                    });
                 });
             }
         });

@@ -14,7 +14,7 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-let socket = io('https://callcenter-backend.herokuapp.com');
+let socket = io('localhost:5000');
 socket = io.connect();
 
 class Supervisiones extends React.Component{

@@ -29,7 +29,8 @@ class App extends React.Component {
     this.handleSession = this.handleSession.bind(this);
     this.logOut = this.logOut.bind(this);
 
-    axios.defaults.baseURL = 'https://callcenter-backend.herokuapp.com'
+    //axios.defaults.baseURL = 'https://callcenter-backend.herokuapp.com'
+    axios.defaults.baseURL = 'http://localhost:5000'
   }
 
   logOut(){
