@@ -10,12 +10,12 @@ import {
  } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import LoginRedirect from './LoginRedirect';
-import io from 'socket.io-client';
+//import io from 'socket.io-client';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
-let socket = io('localhost:5000');
-socket = io.connect();
+//let socket = io('localhost:5000');
+//socket = io.connect();
 
 class Supervisiones extends React.Component{
     constructor(props){
@@ -51,7 +51,7 @@ class Supervisiones extends React.Component{
 
         this.getCarteras();
 
-        socket.on('connect', () => {
+        /*socket.on('connect', () => {
             this.setState({
                 carteras: {
                     ...this.state.carteras,
@@ -180,13 +180,13 @@ class Supervisiones extends React.Component{
                     //console.log(this.state.carteras[data.room]);
                     break;
               }
-        });
+        });*/
     }
 
     render(){
         return(
             <>
-                { this.props.usuario === 'supervisor' ?
+                { this.props.usuario === 'Supervisor' ?
                     <>
                         <h1>Supervisiones</h1>
                             <Row>

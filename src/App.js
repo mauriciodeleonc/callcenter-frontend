@@ -30,13 +30,13 @@ class App extends React.Component {
     this.logOut = this.logOut.bind(this);
 
     //axios.defaults.baseURL = 'https://callcenter-backend.herokuapp.com'
-    axios.defaults.baseURL = 'http://localhost:5000'
+    axios.defaults.baseURL = 'http://localhost:4000'
   }
 
   logOut(){
     this.setState({
       nivelUsuario: '',
-      idUsuario: undefined
+      idUsuario: ''
     });
     localStorage.clear();
     return <Redirect to="/" />
@@ -67,7 +67,7 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' render={(props)=> <Login {...props} handleSession={this.handleSession} usuario={this.state.nivelUsuario}/>}/>
             <Row className='full-height'>
-              {this.state.nivelUsuario == 'ejecutivo' ? 
+              {this.state.nivelUsuario === 'ejecutivo' ? 
               <Col md={12}>
                 <Route path='/llamar' render={(props)=> <Llamar {...props} usuario={this.state.nivelUsuario} idUsuario={this.state.idUsuario}/>}/>
                 {/*<Route path='/equipos' render={(props)=> <Equipos {...props} usuario={this.state.nivelUsuario} idUsuario={this.state.idUsuario}/>}/>*/}

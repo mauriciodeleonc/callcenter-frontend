@@ -68,7 +68,7 @@ class Navigation extends React.Component{
                             </>
                         }
                         {
-                            this.props.usuario === 'supervisor' && 
+                            this.props.usuario === 'Supervisor' && 
                             <>
                                 <Link to='/supervisiones'>
                                     <li>

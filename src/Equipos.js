@@ -69,7 +69,7 @@ class Equipos extends React.Component{
     render(){
         return(
             <>
-                { this.props.usuario === 'supervisor' ?
+                { this.props.usuario === 'Supervisor' ?
                     <>
                         <h1>Equipos</h1>
                             <Row style={{marginTop: '20px'}}>

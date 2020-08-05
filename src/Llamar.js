@@ -22,8 +22,8 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import lodash from 'lodash';
  
-let socket = io('localhost:5000');
-socket = io.connect();
+//let socket = io('localhost:5000');
+//socket = io.connect();
 
 class EditarGestion extends React.Component {
     constructor(props){
@@ -628,12 +628,12 @@ class Llamar extends React.Component{
                 room: response.data[0][0].nombre
             }, () => {
                 
-                socket.on('connect', () => {
+                /*socket.on('connect', () => {
                     //socket.emit('room', response.data[0][0].nombre);
                     console.log(response.data[0][0].nombre);
                     socket.emit('room', this.state.room);
                     
-                 });
+                 });*/
             });
             
         });
@@ -837,7 +837,7 @@ class Llamar extends React.Component{
             this.setState({
                 marcarDisabled: true
             });
-            socket.emit('llamada', {room: this.state.room, idUsuario: this.state.idUsuario, minutosLlamada: this.state.minutosLlamada, segundosLlamada: this.state.segundosLamada});
+           // socket.emit('llamada', {room: this.state.room, idUsuario: this.state.idUsuario, minutosLlamada: this.state.minutosLlamada, segundosLlamada: this.state.segundosLamada});
         }, 1000);
     }
     
@@ -855,7 +855,7 @@ class Llamar extends React.Component{
             marcarDisabled: false,
             modalShow: true
         });
-        socket.emit('llamada', {room: this.state.room, idUsuario: this.state.idUsuario, minutosLlamada: '00', segundosLlamada: '00'});
+        //.emit('llamada', {room: this.state.room, idUsuario: this.state.idUsuario, minutosLlamada: '00', segundosLlamada: '00'});
     }
 
     insertTelefonoNuevo(telefono){
@@ -923,13 +923,13 @@ class Llamar extends React.Component{
                     this.nextClient();
                 }
             });
-            socket.emit('message', {
+            /*socket.emit('message', {
                 estadoBoton: 'predictivo',
                 room: this.state.room,
                 idUsuario: this.state.idUsuario
-            });
+            });*/
             //El valor de estado ejecutivo nos ayuda a
-            //en supervisor quien esta en llamada, quien en pausa
+            //en Supervisor quien esta en llamada, quien en pausa
             //y quien desconectado
         } else {
             this.setState({
@@ -940,13 +940,13 @@ class Llamar extends React.Component{
                 estadoEjecutivo: 'desconectado',
                 pressPredictivo: this.state.pressPredictivo + 1
             });
-            socket.emit('message-disconnect', {
+            /*socket.emit('message-disconnect', {
                 estadoBoton: 'predictivo',
                 room: this.state.room,
                 idUsuario: this.state.idUsuario
-            });
+            });*/
             //El valor de estado ejecutivo nos ayuda a
-            //en supervisor quien esta en llamada, quien en pausa
+            //en Supervisor quien esta en llamada, quien en pausa
             //y quien desconectado
         }
     }
@@ -961,14 +961,14 @@ class Llamar extends React.Component{
                 estadoEjecutivo: 'manual',
                 pressManual: this.state.pressManual + 1
             });
-            socket.emit('message', {
+           /* socket.emit('message', {
                 estadoBoton: 'manual',
                 room: this.state.room,
                 idUsuario: this.state.idUsuario
-            });
+            });*/
             this.nameInput.focus();
             //El valor de estado ejecutivo nos ayuda a
-            //en supervisor quien esta en llamada, quien en pausa
+            //en Supervisor quien esta en llamada, quien en pausa
             //y quien desconectado
         } else {
             this.setState({
@@ -979,13 +979,13 @@ class Llamar extends React.Component{
                 estadoEjecutivo: 'desconectado',
                 pressManual: this.state.pressManual + 1
             });
-            socket.emit('message-disconnect', {
+            /*socket.emit('message-disconnect', {
                 estadoBoton: 'manual',
                 room: this.state.room,
                 idUsuario: this.state.idUsuario
-            });
+            });*/
             //El valor de estado ejecutivo nos ayuda a
-            //en supervisor quien esta en llamada, quien en pausa
+            //en Supervisor quien esta en llamada, quien en pausa
             //y quien desconectado
         }
     }
@@ -1000,13 +1000,13 @@ class Llamar extends React.Component{
                 estadoEjecutivo: 'pausa',
                 pressPause: this.state.pressPause + 1
             });
-            socket.emit('message', {
+            /*socket.emit('message', {
                 estadoBoton: 'pausa',
                 room: this.state.room,
                 idUsuario: this.state.idUsuario
-            });
+            });*/
             //El valor de estado ejecutivo nos ayuda a
-            //en supervisor quien esta en llamada, quien en pausa
+            //en Supervisor quien esta en llamada, quien en pausa
             //y quien desconectado
         } else  {
             this.setState({
@@ -1017,13 +1017,13 @@ class Llamar extends React.Component{
                 estadoEjecutivo: 'desconectado',
                 pressPause: this.state.pressPause + 1
             });
-            socket.emit('message-disconnect', {
+            /*socket.emit('message-disconnect', {
                 estadoBoton: 'pausa',
                 room: this.state.room,
                 idUsuario: this.state.idUsuario
-            });
+            });*/
             //El valor de estado ejecutivo nos ayuda a
-            //en supervisor quien esta en llamada, quien en pausa
+            //en Supervisor quien esta en llamada, quien en pausa
             //y quien desconectado
         }
     }
@@ -1032,7 +1032,7 @@ class Llamar extends React.Component{
         return(
             <Row>
                 <Col>
-                    { (this.props.usuario === 'ejecutivo' || this.props.usuario === 'supervisor') ? 
+                    { (this.props.usuario === 'ejecutivo' || this.props.usuario === 'Supervisor' || true) ? 
                         <>
                             <h1>Llamar</h1>
                             <Container fluid>

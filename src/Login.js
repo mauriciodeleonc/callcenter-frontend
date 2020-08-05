@@ -23,28 +23,22 @@ class Login extends React.Component{
 
     getEmpleado = (event) => {
         event.preventDefault();
-        if(this.state.usuario == '' || this.state.contrasena == ''){
+        if(this.state.usuario === '' || this.state.contrasena === ''){
             alert('Asegurese de llenar correctamente todos los campos');
         } else {
-            axios.get('/getEmpleado', {
-                headers: {"Access-Control-Allow-Origin": "*"},
-                params: {
+            axios.post('/empleados/auth', {
                     usuario: this.state.usuario,
                     contrasena: this.state.contrasena
-                }
-            }).then(response => {
-                if(response.data[0][0]){
+                }).then(({ data }) => {
+                    const { rol, usuario } = data.data;
                     this.setState({
-                        nivelUsuario: response.data[0][0].rol.toLowerCase(),
-                        idUsuario: response.data[0][0].idEmpleado
+                        nivelUsuario: rol,
+                        usuario
                     }, () => {
-                        this.props.handleSession(this.state.nivelUsuario, this.state.idUsuario);
+                        this.props.handleSession(this.state.nivelUsuario, this.state.usuario);
                     });
-                } else {
-                    alert('Su usuario o contraseña son incorrectos');
-                }
             }).catch(err => {
-                console.log(err.message);
+                alert("Revise que su usuario y contraseñas sean correctos");
             });
         }
     };
@@ -53,11 +47,12 @@ class Login extends React.Component{
     handleContrasena(event){this.setState({contrasena: event.target.value});}
 
     render(){
-        if(this.props.usuario === 'supervisor'){
+        console.log(this.props.usuario);
+        if(this.props.usuario === 'Supervisor'){
             return <Redirect to='/supervisiones' />
-        } else if(this.props.usuario === 'admin'){
+        } else if(this.props.usuario === 'Admin'){
             return <Redirect to='/usuarios' />
-        } else if(this.props.usuario === 'ejecutivo'){
+        } else if(this.props.usuario === 'Ejecutivo'){
             return <Redirect to='/llamar' />
         } else {
             return(

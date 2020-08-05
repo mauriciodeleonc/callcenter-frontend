@@ -112,6 +112,7 @@ class AgregarUsuario extends React.Component {
 class EditarUsuario extends React.Component {
   constructor(props){
     super(props);
+    console.table(props.empleado);
     this.state = {
       empleadoViejo: {
         idEmpleado: this.props.empleado.idEmpleado,
@@ -123,11 +124,11 @@ class EditarUsuario extends React.Component {
       },
       empleadoNuevo: {
         idEmpleado: this.props.empleado.idEmpleado,
-        nombre: '',
-        usuario: '',
-        contrasena: '',
-        rol: '',
-        estado: 1
+        nombre: this.props.empleado.nombre,
+        usuario: this.props.empleado.usuario,
+        contrasena: this.props.empleado.contrasena,
+        rol: this.props.empleado.rol,
+        estado: this.props.empleado.estado
       }
     }
     
@@ -150,7 +151,8 @@ class EditarUsuario extends React.Component {
         rol: this.state.empleadoNuevo.rol,
         usuario: this.state.empleadoNuevo.usuario,
         contrasena: this.state.empleadoNuevo.contrasena,
-        estado: this.state.empleadoNuevo.estado
+        estado: this.state.empleadoNuevo.estado,
+        usuarioOriginal: this.props.empleado.usuario
       }
       this.props.editarUsuario(empleadoEditar);
       this.props.onHide();
@@ -226,11 +228,12 @@ class EditarUsuario extends React.Component {
     }
   }
   handleEstado(event){
+    const valor = event.target.value === 'empleado';
     if(this.props.empleado.estado !== event.target.value){
       this.setState({
         empleadoNuevo: { 
           ...this.state.empleadoNuevo,
-          estado: event.target.value
+          estado: valor
         }
       });
     } else {
@@ -245,6 +248,7 @@ class EditarUsuario extends React.Component {
 
 
   render(){
+    console.table(this.state.empleadoNuevo);
       return (
         <Modal
           {...this.props}
@@ -265,7 +269,7 @@ class EditarUsuario extends React.Component {
                         type="text" 
                         value={this.state.empleadoNuevo.nombre} 
                         onChange={this.handleNombre} 
-                        placeholder={this.props.empleado.nombre} 
+                        placeholder="Nombre"
                     />
                 </Form.Group>
                 <Form.Group controlId="usuario">
@@ -274,7 +278,7 @@ class EditarUsuario extends React.Component {
                         type="text" 
                         value={this.state.empleadoNuevo.usuario} 
                         onChange={this.handleUsuario} 
-                        placeholder={this.props.empleado.usuario}  
+                        placeholder="Usuario"  
                     />
                 </Form.Group>
                 <Form.Group controlId="contrasena">
@@ -297,8 +301,8 @@ class EditarUsuario extends React.Component {
                 <Form.Group controlId="estado">
                   <Form.Label><b>Estado</b></Form.Label>
                   <Form.Control as="select" onChange={this.handleEstado} value={this.state.empleadoNuevo.estado} required>
-                      <option>1</option>
-                      <option>0</option>
+                      <option>empleado</option>
+                      <option>desempleado</option>
                   </Form.Control>
                 </Form.Group>
             </Modal.Body>
@@ -379,42 +383,36 @@ class Usuarios extends React.Component{
     }
 
     getEmpleados(){
-      axios.get('/getEmpleados').then(response => {
-        //console.log(response.data);
+      axios.get('/empleados').then(response => {
         this.setState({
-            empleados: response.data
+            empleados: response.data.data
         });
       });
     }
 
-    componentDidMount(){
+    componentDidMount() {
       this.getEmpleados();
     }
 
     agregarUsuario(empleadoNuevo){
-      axios.post('/insertEmpleado', null, {
-        params: {
-          nombre: empleadoNuevo.nombre.toLowerCase(),
+      axios.post('/empleados', {
+          nombre: empleadoNuevo.nombre,
           rol: empleadoNuevo.rol,
           usuario: empleadoNuevo.usuario,
-          contrasena: empleadoNuevo.contrasena, //Encriptar esta antes del desmadre
-          estado: empleadoNuevo.estado
-        }
-      }).then(response => {
+          contrasena: empleadoNuevo.contrasena
+        }).then(response => {
         this.getEmpleados();
-      });     
+      });
     }
 
     editarUsuario(empleadoUpdate){
-      axios.post('/updateEmpleado', null, {
-        params: {
-          idEmpleado: empleadoUpdate.idEmpleado,
+      axios.put('/empleados', {
           nombre: empleadoUpdate.nombre,
           rol: empleadoUpdate.rol,
           usuario: empleadoUpdate.usuario,
-          contrasena: empleadoUpdate.contrasena, //Encriptar esta antes del desmadre
-          estado: empleadoUpdate.estado
-        }
+          contrasena: empleadoUpdate.contrasena, 
+          estado: empleadoUpdate.estado,
+          usuarioOriginal: empleadoUpdate.usuarioOriginal
       }).then(response => {
         this.getEmpleados();
       });
@@ -422,11 +420,7 @@ class Usuarios extends React.Component{
 
     borrarUsuario(empleadoBorrar){
       console.log(empleadoBorrar);
-      axios.post('/deleteEmpleado', null, {
-        params: {
-          usuario: empleadoBorrar.usuario
-        }
-      }).then(response => {
+      axios.delete(`/empleados/${empleadoBorrar.usuario}`).then(response => {
         this.getEmpleados();
       });
     }
@@ -434,7 +428,7 @@ class Usuarios extends React.Component{
     render(){
         return(
             <>
-              { this.props.usuario === 'admin' ?
+              { this.props.usuario === 'admin' || true ?
                 <>
                   <h1>Usuarios</h1>
                   <Button 
@@ -465,7 +459,7 @@ class Usuarios extends React.Component{
                                       <td>{empleado.usuario}</td>
                                       <td>***********</td>
                                       <td>{empleado.rol}</td>
-                                      <td>{empleado.estado == '1' ? 'empleado' : 'desempleado'}</td>
+                                      <td>{empleado.estado ? 'empleado' : 'desempleado'}</td>
                                       <td>
                                         <Button 
                                           onClick={() => this.setState({modalEditarShow: true, empleadoEditar: empleado})}
@@ -494,7 +488,7 @@ class Usuarios extends React.Component{
                       show={this.state.modalEditarShow}
                       onHide={() => this.setState({modalEditarShow: false})}
                       editarUsuario ={this.editarUsuario}
-                      empleado  = {this.state.empleadoEditar}
+                      empleado={this.state.empleadoEditar}
                   />
                   <BorrarUsuario
                       show={this.state.modalBorrarShow}

@@ -410,7 +410,7 @@ class Cartera extends React.Component{
     render(){
         return(
             <>
-                {(this.props.usuario === 'supervisor') ?
+                {(this.props.usuario === 'Supervisor') ?
                 <>
                 <h1>{(this.props.match.params.nombre.split('+')[0]).charAt(0).toUpperCase() + (this.props.match.params.nombre.split('+')[0]).slice(1)}</h1>
                 <Form 

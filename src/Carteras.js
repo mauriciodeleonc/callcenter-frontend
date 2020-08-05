@@ -96,38 +96,38 @@ class Carteras extends React.Component{
     }
 
     getCarteras(){
-        axios.get('/getCarteras').then(response => {
+        axios.get('/carteras').then(response => {
+            console.log(response);
             this.setState({
-                carteras: response.data[0]
+                carteras: response.data.data
             });
         });
-        console.log(this.state.carteras);
     }
 
     handleFileChosen(file, titulo){
-        
-        readXlsxFile(file).then(async (rows) => {
-            axios.post('/subirCartera', {rows, titulo}, {timeout: 1000 * 60 * 20}).then(() => {
+        axios.post()
+        const data = new FormData();
+        data.append('file', file);
+        data.append('nombre', titulo);
+        const config = {
+            method: 'post',
+            url: 'http://localhost:4000/carteras',
+            data: data
+        };
+        console.log(this);
+        axios(config)
+            .then((response) => {
                 this.getCarteras();
-            });
-
-            /*axios({
-                method: 'post',
-                url: '/subirCartera',
-                timeout: 1000 * 60 * 20,
-                body: {rows, titulo}
-            }).then(() => {
-                this.getCarteras();
-            }).catch(error => {
+            })
+            .catch(function (error) {
                 console.log(error);
-            });*/
-        });
+            });
     }
 
     render(){
         return(
             <>
-                { this.props.usuario === 'supervisor' ?
+                { this.props.usuario === 'Supervisor' ?
                     <>
                         <h1>Carteras</h1>
                         
@@ -152,7 +152,7 @@ class Carteras extends React.Component{
                                                     <Row style={{marginTop: '45px'}}>
                                                         <Col>
                                                             <Button className='boton-morado-circular' disabled><FontAwesomeIcon icon={faWallet} /></Button>
-                                                            <p>{cartera.clientes} clientes</p>
+                                                            <p>{cartera.cantCreditos} clientes</p>
                                                         </Col>
                                                     </Row>
                                                 </Card.Text>

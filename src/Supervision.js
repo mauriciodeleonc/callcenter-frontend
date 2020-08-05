@@ -4,10 +4,11 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import { faHeadset, faPause, faPhoneSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import io from 'socket.io-client';
 import LoginRedirect from './LoginRedirect';
+
+/*import io from 'socket.io-client';
 let socket = io('localhost:5000');
-socket = io.connect();
+socket = io.connect();*/
 
 class Supervision extends React.Component{
     constructor(props){
@@ -47,7 +48,7 @@ class Supervision extends React.Component{
         let idProducto = this.props.match.params.nombre.split('+')[1];
         this.getEmpleadosProducto(idProducto);
 
-        socket.on('connect', () => {
+        /*socket.on('connect', () => {
             //socket.emit('room', this.props.match.params.nombre.split('+')[0]);
             socket.emit('room', 'ITCS');
         });
@@ -164,7 +165,7 @@ class Supervision extends React.Component{
                     //console.log(this.state.carteras[data.idUsuario]);
                     break;
               }
-        });
+        });*/
         
     }
 
@@ -182,7 +183,7 @@ class Supervision extends React.Component{
     render(){
         return(
             <>
-                {(this.props.usuario === 'supervisor') ?
+                {(this.props.usuario === 'Supervisor') ?
                 <>
                 <h1>{(this.props.match.params.nombre.split('+')[0]).charAt(0).toUpperCase() + (this.props.match.params.nombre.split('+')[0]).slice(1)}</h1>
                 <Table striped hover responsive >
