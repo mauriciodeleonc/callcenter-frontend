@@ -105,7 +105,6 @@ class Carteras extends React.Component{
     }
 
     handleFileChosen(file, titulo){
-        axios.post()
         const data = new FormData();
         data.append('file', file);
         data.append('nombre', titulo);
@@ -117,6 +116,29 @@ class Carteras extends React.Component{
         console.log(this);
         axios(config)
             .then((response) => {
+                if(response.data.data.corrupted.length > 0){
+                    const configExcel = {
+                        method: 'post',
+                        url: 'http://localhost:4000/carteras/recovery',
+                        data: response.data.data.corrupted,
+                        /*headers:
+                            {
+                                'Content-Disposition': "attachment; filename=template.xlsx",
+                                'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            },*/
+                        responseType: 'arraybuffer',
+                    }
+                    alert("Revisa los campos faltantes o erroneos en el Excel y actualizalos entrando a la cartera correspondiente");
+                    axios(configExcel).then((responseExcel) => {
+                        const url = window.URL.createObjectURL(new Blob([responseExcel.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', `correciones_${response.data.data.cartera.nombre}.xlsx`);
+                        document.body.appendChild(link);
+                        link.click();
+                    })
+                        .catch((error) => console.log(error));
+                }
                 this.getCarteras();
             })
             .catch(function (error) {
@@ -156,7 +178,7 @@ class Carteras extends React.Component{
                                                         </Col>
                                                     </Row>
                                                 </Card.Text>
-                                                <Link to={`/carteras/${cartera.nombre}+${cartera.idProducto}`}>
+                                                <Link to={`/carteras/${cartera.nombre}+${cartera.idCartera}`}>
                                                     <Button className='boton-morado' block>Ver más +</Button>
                                                 </Link>
                                             </Card.Body>

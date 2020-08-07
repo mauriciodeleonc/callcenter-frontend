@@ -47,7 +47,6 @@ class Login extends React.Component{
     handleContrasena(event){this.setState({contrasena: event.target.value});}
 
     render(){
-        console.log(this.props.usuario);
         if(this.props.usuario === 'Supervisor'){
             return <Redirect to='/supervisiones' />
         } else if(this.props.usuario === 'Admin'){

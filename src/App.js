@@ -67,7 +67,7 @@ class App extends React.Component {
           <Switch>
             <Route exact path='/' render={(props)=> <Login {...props} handleSession={this.handleSession} usuario={this.state.nivelUsuario}/>}/>
             <Row className='full-height'>
-              {this.state.nivelUsuario === 'ejecutivo' ? 
+              {this.state.nivelUsuario === 'Ejecutivo' ? 
               <Col md={12}>
                 <Route path='/llamar' render={(props)=> <Llamar {...props} usuario={this.state.nivelUsuario} idUsuario={this.state.idUsuario}/>}/>
                 {/*<Route path='/equipos' render={(props)=> <Equipos {...props} usuario={this.state.nivelUsuario} idUsuario={this.state.idUsuario}/>}/>*/}
@@ -77,7 +77,7 @@ class App extends React.Component {
                 <Route exact path='/reportes' render={(props)=> <Reportes {...props} usuario={this.state.nivelUsuario} idUsuario={this.state.idUsuario}/>}/>
                 <Route path='/reportes/:nombre' render={(props)=> <Reporte {...props} usuario={this.state.nivelUsuario} idUsuario={this.state.idUsuario}/>} />
                 <Route path='/usuarios' render={(props)=> <Usuarios {...props} usuario={this.state.nivelUsuario} idUsuario={this.state.idUsuario}/>}/>
-                <Route path='/carteras/:nombre' render={(props)=> <Cartera {...props} usuario={this.state.nivelUsuario} idUsuario={this.state.idUsuario}/>} />
+                <Route path='/carteras/:nombre' render={(props)=> <Cartera {...props}  usuario={this.state.nivelUsuario} idUsuario={this.state.idUsuario}/>} />
               </Col>
               :
               <>

@@ -25,272 +25,6 @@ import lodash from 'lodash';
 //let socket = io('localhost:5000');
 //socket = io.connect();
 
-class EditarGestion extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            comentario: this.props.cliente.cliente.gestiones[0][0].comentarios,
-            codigoAccion: this.props.cliente.cliente.gestiones[0][0].codigoAccion,
-            codigoResultado: this.props.cliente.cliente.gestiones[0][0].codigoResultado,
-            codigoContacto: this.props.cliente.cliente.gestiones[0][0].codigoContacto,
-            creditos: [this.props.cliente.cliente.creditos[0].numCredito],
-            fechaPromesa: '',
-            montoPromesa: '',
-            validated: false,
-            today: '',
-            todayDate: '',
-            todayHour: ''
-        }
-
-        this.handleComentario = this.handleComentario.bind(this);
-        this.handleCodigoContacto = this.handleCodigoContacto.bind(this);
-        this.handleCodigoAccion = this.handleCodigoAccion.bind(this);
-        this.handleCodigoResultado = this.handleCodigoResultado.bind(this);
-        this.handleCredito = this.handleCredito.bind(this);
-        this.guardarReporte = this.guardarReporte.bind(this);
-        this.handleFechaPromesa = this.handleFechaPromesa.bind(this);
-        this.handleMontoPromesa = this.handleMontoPromesa.bind(this);
-        this.insertGestion = this.insertGestion.bind(this);
-    }
-
-    insertGestion(){
-        for(let i = 0; i < this.state.creditos.length; i++){
-            //let fechaHoraGestion = new Date(Date.parse(this.state.today));
-            let today = new Date();
-            let fechaHoraGestion = today.toISOString().slice(0, 19).replace('T', ' ');
-            axios.post('/updateGestion', null, {
-                params: {
-                    idGestion: this.props.cliente.cliente.gestiones[0][0].idGestion,
-                    idEmpleadoAsignado: this.props.cliente.cliente.gestiones[0][0].idEmpleadoAsignado,
-                    idEmpleadoAtendido: this.props.idUsuarioAtendido,
-                    numCredito: parseInt(this.state.creditos[i]),
-                    fechaHoraGestion: fechaHoraGestion,
-                    numeroContacto: this.props.telefono,
-                    comentarios: this.state.comentario,
-                    codigoAccion: this.state.codigoAccion,
-                    codigoResultado: this.state.codigoResultado,
-                    codigoContacto: this.state.codigoContacto
-                }
-            }).then(response => {
-                
-                if(this.state.fechaPromesa !== ''){
-                    let fechaPromesa = this.state.fechaPromesa  + ' 00:00:00';
-                    axios.post('/updatePromesa', null, {
-                        params: {
-                            idGestion: this.props.cliente.cliente.gestiones[0][0].idGestion,
-                            fechaPromesa: fechaPromesa,
-                            montoPromesa: parseFloat(this.state.montoPromesa)
-                        }
-                    })
-                }
-            });
-        }
-    }
-
-    componentDidUpdate(){
-        let now = new Date();
-        let nowHour = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-        if(nowHour != this.state.todayHour){
-            let today = new Date();
-            let todayDate = (today.getMonth() + 1) + "-" + today.getDate() + "-" + today.getFullYear();
-            let todayHour = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-            this.setState({
-                today: today,
-                todayDate: todayDate,
-                todayHour: todayHour
-            });
-        }
-    }
-
-    handleComentario(event){this.setState({comentario: event.target.value});}
-
-    handleCodigoContacto(event){this.setState({codigoContacto: event.target.value});}
-    handleCodigoAccion(event){this.setState({codigoAccion: event.target.value});}
-    handleCodigoResultado(event){this.setState({codigoResultado: event.target.value});}
-    handleMontoPromesa(event){this.setState({montoPromesa: event.target.value});}
-    handleFechaPromesa(event){this.setState({fechaPromesa: event.target.value});}
-    handleCredito(event){
-        let clon = lodash.cloneDeep(this.state.creditos);
-        let i = clon.indexOf(event.target.value);
-        if (i > -1) {
-            clon.splice(i, 1);
-        } else {
-            clon.push(event.target.value);
-        }
-        this.setState({creditos: clon});
-    }
-
-    guardarReporte(event){
-        event.preventDefault();
-        if(this.state.comentario === '' || this.state.creditos.length === 0 || this.state.codigoAccion === '--' || this.state.codigoResultado === '--' || this.state.codigoContacto === '--'){
-            alert('Revise que todos los campos han sido llenados correctamente');
-        } else {
-            this.insertGestion();
-            //Agregar reporte a la base de datos
-            this.props.onHide();
-            //this.props.nextClient();
-        }
-    }
-    
-    render(){
-        return (
-            <Modal
-            {...this.props}
-            size="lg"
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-            >
-                <Form onSubmit={this.guardarReporte}>
-                    <Modal.Header closeButton>
-                        <Modal.Title id="contained-modal-title-vcenter">
-                        Reporte de llamada
-                        </Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <p><b>Nombre: </b>{this.props.cliente.nombre}</p>
-                        <p><b>Teléfono marcado:</b> {this.props.telefono}</p>
-                        <p><b>Créditos:</b> (Selecciona todos los que hayas gestionado)</p>{/* mostrar todos los creditos del broder este */}
-                        {this.state.creditos.map((credito) => (
-                            <div key={credito} className="mb-3">
-                                <Form.Check 
-                                    type='checkbox'
-                                    id={credito}
-                                    label={credito}
-                                    onChange={this.handleCredito}
-                                    value={credito}
-                                    checked
-                                />
-                            </div>
-                        ))}
-                        <p><b>Fecha:</b> {this.state.todayDate}</p>
-                        <p><b>Hora:</b> {this.state.todayHour}</p>
-                        <Form.Group controlId="comentario">
-                            <Form.Label><b>Comentario:</b></Form.Label>
-                            <Form.Control 
-                                as="textarea"
-                                rows="3"
-                                value={this.state.comentario} 
-                                onChange={this.handleComentario} 
-                                placeholder="Comentario"
-                                required 
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="exampleForm.ControlSelect1">
-                            <Form.Label><b>Código de Acción</b></Form.Label>
-                            <Form.Control as="select" onChange={this.handleCodigoAccion} value={this.state.codigoAccion} required>
-                                <option>{this.state.codigoAccion}</option>
-                                <option>Casa</option>
-                                <option>Celular</option>
-                                <option>Laboral</option>
-                                <option>Sucursal</option>
-                                <option>Ref 1</option>
-                                <option>Ref 2</option>
-                                <option>Ref 3</option>
-                                <option>Ref 4</option>
-                                <option>Ref 5</option>
-                                <option>Whatsapp</option>
-                                <option>Correo</option>
-                                <option>Visita Casa</option>
-                                <option>Visita Garantía</option>
-                                <option>Visita Laboral</option>
-                                <option>Visita Otro</option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group controlId="exampleForm.ControlSelect1">
-                            <Form.Label><b>Código de Resultado</b></Form.Label>
-                            <Form.Control as="select" onChange={this.handleCodigoResultado} value={this.state.codigoResultado} required>
-                                <option>{this.state.codigoResultado}</option>
-                                <option>Contacto Indirecto</option>
-                                <option>Cónyugue</option>
-                                <option>Encargado de Pagos</option>
-                                <option>Familiar</option>
-                                <option>Hijo</option>
-                                <option>No Contacto</option>
-                                <option>Padre</option>
-                                <option>Referencia</option>
-                                <option>Tercero</option>
-                                <option>Titular</option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group controlId="exampleForm.ControlSelect1">
-                            <Form.Label><b>Código de Contacto</b></Form.Label>
-                            <Form.Control as="select" onChange={this.handleCodigoContacto} value={this.state.codigoContacto} required>
-                                <option>{this.state.codigoContacto}</option>
-                                <option>Aclaración</option>
-                                <option>Buzón</option>
-                                <option>Cargo Domiciliado</option>
-                                <option>Cargo No Realizado</option>
-                                <option>Crédito Liquidado</option>
-                                <option>Cuelga</option>
-                                <option>Defunción</option>
-                                <option>Desempleado</option>
-                                <option>Enfermedad</option>
-                                <option>Envio Carta de No Acuerdo</option>
-                                <option>Envio Convenio de Liquidación</option>
-                                <option>Evasivo</option>
-                                <option>Fuera de Servicio</option>
-                                <option>Insolvente</option>
-                                <option>Interesado en Liq.</option>
-                                <option>Mensaje</option>
-                                <option>Negativa de Pago</option>
-                                <option>No Contestan</option>
-                                <option>No Existe</option>
-                                <option>No Labora Ahí</option>
-                                <option>No Lo Conocen</option>
-                                <option>No Vive Ahí</option>
-                                <option>Nuevos Datos</option>
-                                <option>Número Incompleto</option>
-                                <option>Promesa de Pago</option>
-                                <option>Promesa Rota</option>
-                                <option>Recado Fam</option>
-                                <option>Recado Ref</option>
-                                <option>Seguimiento a PP</option>
-                                <option>Sin Información</option>
-                                <option>Solicita Cargo</option>
-                                <option>Ya Pagó</option>
-                                <option>Abandonada</option>
-                                <option>Aviso Bajo Puerta</option>
-                                <option>Deshabitada</option>
-                            </Form.Control>
-                        </Form.Group>
-                        {
-                            this.state.codigoContacto ===  'Promesa de Pago' ? 
-                            <>
-                                <Form.Group controlId="fechaPromesa">
-                                    <Form.Label><b>Fecha de promesa:</b></Form.Label>
-                                    <Form.Control 
-                                        type="date" 
-                                        value={this.state.fechaPromesa} 
-                                        onChange={this.handleFechaPromesa}
-                                        required
-                                    />
-                                </Form.Group>
-                                <Form.Group controlId="montoPromesa">
-                                    <Form.Label><b>Monto de promesa:</b></Form.Label>
-                                    <Form.Control 
-                                        type="number"
-                                        min="1"
-                                        step="any"
-                                        value={this.state.montoPromesa} 
-                                        onChange={this.handleMontoPromesa}
-                                        required
-                                    />
-                                </Form.Group>
-                            </>
-                            : 
-                            <></>
-                        }
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button type="submit" onClick={() => this.guardarReporte}>Guardar gestión</Button>
-                    </Modal.Footer>
-                </Form>
-            </Modal>
-
-        );
-    }
-}
-
 class GenerarReporte extends React.Component {
     constructor(props){
         super(props);
@@ -320,64 +54,36 @@ class GenerarReporte extends React.Component {
     }
 
     insertGestion(){
-        for(let i = 0; i < this.state.creditos.length; i++){
-            //let fechaHoraGestion = new Date(Date.parse(this.state.today));
-            
-            let fechaHoraGestion = this.state.today.toISOString().slice(0, 19).replace('T', ' ');
-            axios.post('/insertGestion', null, {
-                params: {
-                    idEmpleadoAsignado: this.props.idUsuarioAsignado,
-                    idEmpleadoAtendido: this.props.idUsuarioAtendido,
-                    numCredito: parseInt(this.state.creditos[i]),
-                    fechaHoraGestion: fechaHoraGestion,
-                    numeroContacto: this.props.telefono,
-                    comentarios: this.state.comentario,
-                    codigoAccion: this.state.codigoAccion,
-                    codigoResultado: this.state.codigoResultado,
-                    codigoContacto: this.state.codigoContacto
-                }
-            }).then(response => {
-                
-                if(this.state.fechaPromesa !== ''){
-                    let fechaPromesa = this.state.fechaPromesa  + ' 00:00:00';
-                    axios.post('/insertPromesa', null, {
-                        params: {
-                            idGestion: response.data[0][0].idGestion,
-                            fechaPromesa: fechaPromesa,
-                            montoPromesa: parseFloat(this.state.montoPromesa)
-                        }
-                    })
-                }
-                this.setState({
-                    comentario: '',
-                    codigoAccion: '--',
-                    codigoResultado: '--',
-                    codigoContacto: '--',
-                    creditos: [],
-                    fechaPromesa: '',
-                    montoPromesa: '',
-                    validated: false,
-                    today: '',
-                    todayDate: '',
-                    todayHour: ''
-                });
-            });
-        }
-    }
-
-    componentDidUpdate(){
-        let now = new Date();
-        let nowHour = now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
-        if(nowHour != this.state.todayHour){
-            let today = new Date();
-            let todayDate = (today.getMonth() + 1) + "-" + today.getDate() + "-" + today.getFullYear();
-            let todayHour = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        const promesa = this.state.codigoContacto === 'Promesa de Pago' ? {
+            fecha: new Date(this.state.fechaPromesa),
+            monto: this.state.montoPromesa
+        } : undefined;
+        axios.post(`/gestiones`, {
+            empleadoAsignado: this.props.idUsuarioAsignado,
+            empleadoAtendio: this.props.idUsuarioAtendido,
+            fechaHora: new Date(),
+            numeroContacto: this.props.telefono,
+            comentarios: this.state.comentario,
+            codigoAccion: this.state.codigoAccion,
+            codigoResultado: this.state.codigoResultado,
+            codigoContacto: this.state.codigoContacto,
+            creditos: this.state.creditos,
+            promesa
+        }).then(() => {
             this.setState({
-                today: today,
-                todayDate: todayDate,
-                todayHour: todayHour
+                comentario: '',
+                codigoAccion: '--',
+                codigoResultado: '--',
+                codigoContacto: '--',
+                creditos: [],
+                fechaPromesa: '',
+                montoPromesa: '',
+                validated: false,
+                today: '',
+                todayDate: '',
+                todayHour: ''
             });
-        }
+        });
     }
 
     handleComentario(event){this.setState({comentario: event.target.value});}
@@ -406,7 +112,6 @@ class GenerarReporte extends React.Component {
             this.insertGestion();
             //Agregar reporte a la base de datos
             this.props.onHide();
-            this.props.nextClient();
         }
     }
     
@@ -428,7 +133,7 @@ class GenerarReporte extends React.Component {
                         <p><b>Nombre: </b>{this.props.cliente.nombre}</p>
                         <p><b>Teléfono marcado:</b> {this.props.telefono}</p>
                         <p><b>Créditos:</b> (Selecciona todos los que hayas gestionado)</p>{/* mostrar todos los creditos del broder este */}
-                        {this.props.cliente.cliente.creditos.map((credito) => (
+                        {this.props.creditos.map((credito) => (
                             <div key={credito.numCredito} className="mb-3">
                                 <Form.Check 
                                     type='checkbox'
@@ -439,8 +144,6 @@ class GenerarReporte extends React.Component {
                                 />
                             </div>
                         ))}
-                        <p><b>Fecha:</b> {this.state.todayDate}</p>
-                        <p><b>Hora:</b> {this.state.todayHour}</p>
                         <Form.Group controlId="comentario">
                             <Form.Label><b>Comentario:</b></Form.Label>
                             <Form.Control 
@@ -607,208 +310,41 @@ class Llamar extends React.Component{
         this.modoPausa = this.modoPausa.bind(this);
         this.handleTelefonoMarcar = this.handleTelefonoMarcar.bind(this);
         this.handleNumeroTelefono = this.handleNumeroTelefono.bind(this);
-        this.getProductoEmpleado = this.getProductoEmpleado.bind(this);
-        this.getInfoClientes = this.getInfoClientes.bind(this);
-        this.nextClient = this.nextClient.bind(this);
         this.buscarCliente = this.buscarCliente.bind(this);
         this.handleClienteBuscar = this.handleClienteBuscar.bind(this);
-        this.getClienteCredito = this.getClienteCredito.bind(this);
     }
 
     handleClienteBuscar(event){this.setState({clienteBuscar: event.target.value});}
 
-
-    getProductoEmpleado(){
-        axios.get('/getProductoEmpleado', {
-            params: {
-                idEmpleado: this.props.idUsuario
-            }
-        }).then(response => {
-            this.setState({
-                room: response.data[0][0].nombre
-            }, () => {
-                
-                /*socket.on('connect', () => {
-                    //socket.emit('room', response.data[0][0].nombre);
-                    console.log(response.data[0][0].nombre);
-                    socket.emit('room', this.state.room);
-                    
-                 });*/
-            });
-            
-        });
-    }
-    
     buscarCliente(event){
         event.preventDefault();
-        this.getClienteCredito();
-    }
-
-    getClienteCredito(){
-        axios.get('/getClienteCredito', {
-            params: {
-                numCredito: parseInt(this.state.clienteBuscar)
-            }
-        }).then(response => {
-            let referencias = {}
-            for(let i = 0; i < response.data.referencias.length; i++){
-                referencias[response.data.referencias[i].nombre] = {
-                    telCasa: response.data.referencias[i].telCasa,
-                    telCelular: response.data.referencias[i].telCelular
-                }
-            }
-            let gestion = [];
-            gestion[0] = response.data.gestion;
+        axios.get(`/clientes/next/${this.state.clienteBuscar}`).then((res) => {
+            const clienteInfo = res.data.data.cliente;
+            console.log(clienteInfo);
+            let gestiones = clienteInfo.Creditos.flatMap(credito => {
+                return credito.Gestiones;
+            });
+            console.log(gestiones);
+            gestiones = gestiones.sort((a, b) => (new Date(b.createdAt).getTime() / 1000) - (new Date(a.createdAt).getTime() / 1000));
             this.setState({
                 cliente: {
-                    cliente: {
-                        idCliente: response.data.idCliente,
-                        idProducto: response.data.idProducto,
-                        idCliente: response.data.idCliente,
-                        telCasa: response.data.telCasa,
-                        telCelular: response.data.telCelular,
-                        idCliente: response.data.idCliente,
-                        creditos: response.data.credito,
-                        frecuencia: response.data.frecuencia,
-                        referencias: referencias,
-                        gestiones: gestion
-                    },
-                    nombre: response.data.nombre,
-                    rfc: response.data.rfc
+                    nombre: clienteInfo.nombre,
+                    rfc: clienteInfo.rfc,
+                    telCasa: clienteInfo.telCasa,
+                    telCel: clienteInfo.telCelular
                 },
-            });
-            this.setState({
-                renderReady: true,
-                clienteReady: true
-            });
+                clienteReady: true,
+                creditos: clienteInfo.Creditos,
+                referencias: clienteInfo.Referencias,
+                gestiones
+            })
         });
-        /* AQUI MERO ES MI MEQUETREFE, PONTE TRUCHA GUAPETON*/
-    }
-
-    getInfoClientes(idEmpleado){
-        axios.get('/getInfoClientes', {
-            params: {
-                idEmpleado: idEmpleado
-            }
-        }).then(response => {
-            let i = 0
-            for(i; i < response.data[0][0].length; i++){
-                let referencias = {}
-                for(let j = 0; j < response.data[0][0][i].referencias.length; j++ ){
-                    referencias[response.data[0][0][i].referencias[j].nombre] = {
-                        telCasa: response.data[0][0][i].referencias[j].telCasa,
-                        telCelular: response.data[0][0][i].referencias[j].telCelular
-                    }
-                }
-                
-                this.setState({
-                    clientes: {
-                        ...this.state.clientes,
-                        [response.data[0][0][i].nombre]: {
-                            ...this.state.clientes[response.data[0][0][i].nombre],
-                            idCliente: response.data[0][0][i].idCliente,
-                            telCasa: response.data[0][0][i].telCasa,
-                            telCelular: response.data[0][0][i].telCelular,
-                            referencias: referencias
-                        }
-                    }
-                });
-
-                let creditos;
-                let gestiones;
-                if(this.state.clientes[response.data[0][0][i].nombre]){
-                    if(this.state.clientes[response.data[0][0][i].nombre].creditos){
-                        creditos = [...this.state.clientes[response.data[0][0][i].nombre].creditos, response.data[0][0][i].credito];
-                    } else {
-                        creditos = [response.data[0][0][i].credito];
-                    }
-                    if(this.state.clientes[response.data[0][0][i].nombre].gestiones){
-                        gestiones = [...this.state.clientes[response.data[0][0][i].nombre].gestiones, response.data[0][0][i].gestion];
-                    } else {
-                        gestiones = [response.data[0][0][i].gestion];
-                    }
-                } else {
-                    creditos = [];
-                    gestiones = [];
-                }
-                
-                this.setState({
-                    clientes: {
-                        ...this.state.clientes,
-                        [response.data[0][0][i].nombre]: {
-                            ...this.state.clientes[response.data[0][0][i].nombre],
-                            creditos: creditos,
-                            gestiones: gestiones
-                        }
-                    }
-                });
-            }
-            if(i >= response.data[0][0].length){
-                this.setState({renderReady: true, nombresClientes: Object.keys(this.state.clientes)});
-                this.nextClient();
-            }
-        });
-    }
-
-    nextClient(){
-        if(this.state.telefonos.length === 0 && this.state.estadoEjecutivo == 'predictivo'){
-            this.setState({clienteReady: false});
-            let clon = lodash.cloneDeep(this.state.nombresClientes);
-            let nombreCliente = clon.shift();
-            let cliente = this.state.clientes[nombreCliente];
-            this.setState({cliente: {cliente, nombre: nombreCliente}});
-            let telefonos = [];
-            telefonos[0] = cliente.telCasa;
-            telefonos[1] = cliente.telCelular;
-            let i = 2;
-            Object.keys(cliente.referencias).map((referencia) => {
-                //console.log(referencia);
-                telefonos[i] = cliente.referencias[referencia].telCasa;
-                //console.log(telefonos[i]);
-                i++;
-                telefonos[i] = cliente.referencias[referencia].telCelular;
-                //console.log(telefonos[i]);
-                i++;
-            });
-            //console.log(telefonos.length);
-            i = 0;
-            while (i < telefonos.length) {
-                if(telefonos[i] === 'null') {
-                    telefonos.splice(i, 1);
-                } else {
-                    ++i;
-                }
-            }
-            //console.log(telefonos);
-            this.setState({
-                nombresClientes: clon,
-                clienteReady: true, 
-                telefonos: telefonos,
-                telefonoMarcar: telefonos[0]
-            }, () => { 
-                this.nextClient();
-            });
-        } else { //Si aun quedan telefonos de ese cliente
-            let telefonosShifted = lodash.cloneDeep(this.state.telefonos);
-            let telefono = telefonosShifted.shift();
-            this.setState({
-                telefonos: telefonosShifted,
-                telefonoMarcar: telefono
-            }, () => {
-                if(this.telefonoMarcar != '' && this.state.estadoEjecutivo == 'predictivo'){
-                    this.iniciarLlamada();
-                }
-            });
-            
-        }
     }
 
     componentDidMount(){
         this.setState({
             idUsuario: localStorage.getItem('idUsuario')
         }, () => {
-            this.getProductoEmpleado();
-            this.getInfoClientes(this.state.idUsuario);
         });  
     }
 
@@ -920,7 +456,6 @@ class Llamar extends React.Component{
                 pressPredictivo: this.state.pressPredictivo + 1 
             }, () => {
                 if(this.state.renderReady){
-                    this.nextClient();
                 }
             });
             /*socket.emit('message', {
@@ -1032,7 +567,7 @@ class Llamar extends React.Component{
         return(
             <Row>
                 <Col>
-                    { (this.props.usuario === 'ejecutivo' || this.props.usuario === 'Supervisor' || true) ? 
+                    { (this.props.usuario === 'Ejecutivo' || this.props.usuario === 'Supervisor') ? 
                         <>
                             <h1>Llamar</h1>
                             <Container fluid>
@@ -1079,21 +614,21 @@ class Llamar extends React.Component{
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        { (this.state.clienteReady && this.state.cliente.cliente) ? 
+                                                        { (this.state.clienteReady) ? 
                                                             <>
-                                                            {this.state.cliente.cliente.creditos.map(credito => {
+                                                            {this.state.creditos.map(credito => {
                                                                 let fechaUltimoPago = new Date(Date.parse(credito.fechaUltimoPago));
                                                                 fechaUltimoPago = fechaUltimoPago.getDate() + "/" + (fechaUltimoPago.getMonth() + 1) + "/" + fechaUltimoPago.getFullYear();
                                                                 return(
                                                                     <tr key={credito.numCredito}>
                                                                         <td>{credito.numCredito}</td>
-                                                                        <td>{credito.bucketInf + ' - ' + credito.bucketSup}</td>
+                                                                        <td>{credito.bucketInicial + ' - ' + credito.bucketFinal}</td>
                                                                         <td>{fechaUltimoPago}</td>
                                                                         <td>{credito.cuota}</td>
-                                                                        <td>{credito.vencido}</td>
-                                                                        <td>{credito.vencidoCuota}</td>
-                                                                        <td>{credito.total}</td>
-                                                                        <td>{credito.liquidacionActual}</td>
+                                                                        <td>{credito.mejora}</td>
+                                                                        <td>{credito.cura}</td>
+                                                                        <td>{credito.sdoTotal}</td>
+                                                                        <td>{credito.sdoLiq}</td>
                                                                         <td>{credito.frecuencia}</td>
                                                                     </tr>
                                                                 );
@@ -1117,32 +652,32 @@ class Llamar extends React.Component{
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        { (this.state.clienteReady && this.state.cliente.cliente && this.state.cliente.cliente.telCasa != 'null') &&
-                                                            <tr onClick={() => this.setState({telefonoMarcar: this.state.cliente.cliente.telCasa, referenciaMarcar: 'Casa Propietario'})}>
-                                                                <td>{(this.state.clienteReady && this.state.cliente.cliente) ? this.state.cliente.cliente.telCasa : <></>}</td>
+                                                        { (this.state.clienteReady && this.state.cliente.telCasa !== 'null') &&
+                                                            <tr onClick={() => this.setState({telefonoMarcar: this.state.cliente.telCasa, referenciaMarcar: 'Casa Propietario'})}>
+                                                                <td>{(this.state.clienteReady) ? this.state.cliente.telCasa : <></>}</td>
                                                                 <td>Casa propietario</td>
                                                             </tr>
                                                         }
-                                                        { (this.state.clienteReady && this.state.cliente.cliente && this.state.cliente.cliente.telCelular != 'null') &&
-                                                            <tr onClick={() => this.setState({telefonoMarcar: this.state.cliente.cliente.telCelular, referenciaMarcar: 'Celular Propietario'})}>
-                                                                <td>{(this.state.clienteReady && this.state.cliente.cliente) ? this.state.cliente.cliente.telCelular : <></>}</td>
+                                                        { (this.state.clienteReady && this.state.cliente.telCel !== 'null') &&
+                                                            <tr onClick={() => this.setState({telefonoMarcar: this.state.cliente.telCel, referenciaMarcar: 'Celular Propietario'})}>
+                                                                <td>{(this.state.clienteReady) ? this.state.cliente.telCel : <></>}</td>
                                                                 <td>Celular propietario</td>
                                                             </tr>
                                                         }
-                                                        {(this.state.clienteReady && this.state.cliente.cliente) ? 
-                                                            Object.keys(this.state.cliente.cliente.referencias).map((referencia) => {
+                                                        {(this.state.clienteReady) ? 
+                                                            this.state.referencias.map((referencia) => {
                                                                 return(
                                                                     <>
-                                                                        { this.state.cliente.cliente.referencias[referencia].telCasa != 'null' &&
-                                                                            <tr key={this.state.cliente.cliente.referencias[referencia].telCasa} onClick={() => this.setState({telefonoMarcar: this.state.cliente.cliente.referencias[referencia].telCasa, referenciaMarcar: referencia})}>
-                                                                                <td>{this.state.cliente.cliente.referencias[referencia].telCasa}</td>
-                                                                                <td>{referencia}</td>
+                                                                        {(referencia.telCasa !== 'null' && referencia.telCasa !== '') &&
+                                                                            <tr key={referencia.telCasa} onClick={() => this.setState({telefonoMarcar: referencia.telCasa, referenciaMarcar: referencia.nombre})}>
+                                                                                <td>{referencia.telCasa}</td>
+                                                                                <td>{referencia.nombre}</td>
                                                                             </tr>
                                                                         }
-                                                                        {this.state.cliente.cliente.referencias[referencia].telCelular != 'null' &&
-                                                                            <tr key={this.state.cliente.cliente.referencias[referencia].telCelular} onClick={() => this.setState({telefonoMarcar: this.state.cliente.cliente.referencias[referencia].telCelular, referenciaMarcar: referencia})}>
-                                                                                <td>{this.state.cliente.cliente.referencias[referencia].telCelular}</td>
-                                                                                <td>{referencia}</td>
+                                                                        {(referencia.telCel !== 'null' &&  referencia.telCel !== '') &&
+                                                                            <tr key={referencia.telCel} onClick={() => this.setState({telefonoMarcar: referencia.telCel, referenciaMarcar: referencia.nombre})}>
+                                                                                <td>{referencia.telCel}</td>
+                                                                                <td>{referencia.nombre}</td>
                                                                             </tr>
                                                                         }
                                                                     </>
@@ -1202,21 +737,19 @@ class Llamar extends React.Component{
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        { (this.state.clienteReady && this.state.cliente.cliente && this.state.cliente.cliente.gestiones) ? 
-                                                            this.state.cliente.cliente.gestiones[0].map(gestion => {
-                                                                console.log(this.state.cliente.cliente.gestiones[0]);
-                                                                let fechaGestionCompleta = new Date(Date.parse(gestion.fechaHoraGestion));
+                                                        { (this.state.clienteReady) ? 
+                                                            this.state.gestiones.map(gestion => {
+                                                                let fechaGestionCompleta = new Date(Date.parse(gestion.createdAt));
                                                                 let fechaGestion =  fechaGestionCompleta.getDate() + "/" + (fechaGestionCompleta.getMonth() + 1) + "/" + fechaGestionCompleta.getFullYear();
 
-                                                                let fechaPromesaCompleta = new Date(Date.parse(gestion.fechaPromesa));
+                                                                let fechaPromesaCompleta = new Date(Date.parse(gestion.Promesa.fecha));
                                                                 let fechaPromesa = fechaPromesaCompleta.getDate() + "/" + (fechaPromesaCompleta.getMonth() + 1) + "/" + fechaPromesaCompleta.getFullYear();
-                                                                console.log(fechaPromesa);
                                                                 
                                                                 return(
                                                                     <tr key={gestion.idGestion}>
-                                                                        <td>{gestion.numCredito}</td>
+                                                                        <td>{gestion.GestionCredito.numCredito}</td>
                                                                         <td>{gestion.numeroContacto}</td>
-                                                                        <td>{fechaGestion}</td>
+                                                                        <td>{fechaGestion  == 'NaN/NaN/NaN' ? '' : fechaGestion}</td>
                                                                         {/*<td>{gestion.empleadoAsignado}</td>
                                                                         <td>{gestion.nombreMarcado}</td>*/}
                                                                         <td>{gestion.comentarios}</td>
@@ -1224,7 +757,7 @@ class Llamar extends React.Component{
                                                                         <td>{gestion.codigoResultado}</td>
                                                                         <td>{gestion.codigoContacto}</td>
                                                                         <td>{fechaPromesa == 'NaN/NaN/NaN' ? '' : fechaPromesa}</td>
-                                                                        <td>{gestion.monto}</td>
+                                                                        <td>{gestion.Promesa.monto}</td>
                                                                     </tr>
                                                                 );
                                                             })
@@ -1234,17 +767,15 @@ class Llamar extends React.Component{
                                                         }
                                                     </tbody>
                                                 </Table>
-                                                {(this.state.estadoEjecutivo === 'manual' && this.state.cliente.cliente) &&
                                                 <Button 
                                                     className='boton-morado' 
-                                                    onClick={() => this.setState({modalEditarShow: true})}
+                                                    onClick={() => this.setState({modalShow: true})}
                                                     style={{
                                                     margin: '10px 0 30px 0'
                                                     }}
                                                 >
-                                                    Editar última gestión de cliente
+                                                    Insertar nueva gestión
                                                 </Button>
-                                                }
                                             </Col>
                                         </Row>
                                     </Col>
@@ -1383,26 +914,15 @@ class Llamar extends React.Component{
                                         </div>
                                     </Col>
                                 </Row>
-                                { (this.state.clienteReady && this.state.cliente.cliente) &&
+                                { (this.state.clienteReady) &&
                                     <GenerarReporte
-                                        show={this.state.modalShow}
+                                        show={this.state.modalShow && this.state.telefonoMarcar !== ''}
                                         onHide={() => this.setState({modalShow: false})}
-                                        cliente = {this.state.cliente}
-                                        telefono = {this.state.telefonoMarcar}
-                                        nextClient = {() => this.nextClient()}
-                                        idUsuarioAsignado = {this.props.idUsuario}
-                                        idUsuarioAtendido = {this.props.idUsuario}
-                                    />
-                                }
-                                { (this.state.clienteReady && this.state.cliente.cliente.gestiones[0][0]) &&
-                                    
-                                    <EditarGestion
-                                        show={this.state.modalEditarShow}
-                                        onHide={() => this.setState({modalEditarShow: false})}
-                                        agregarUsuario ={this.agregarUsuario}
-                                        cliente = {this.state.cliente}
-                                        telefono = {this.state.telefonoMarcar}
-                                        idUsuarioAtendido = {this.props.idUsuario}
+                                        cliente={this.state.cliente}
+                                        creditos={this.state.creditos}
+                                        telefono={this.state.telefonoMarcar}
+                                        idUsuarioAsignado={this.props.idUsuario}
+                                        idUsuarioAtendido={this.props.idUsuario}
                                     />
                                 }
                             </Container>
