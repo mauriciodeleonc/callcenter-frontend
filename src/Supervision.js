@@ -26,7 +26,6 @@ class Supervision extends React.Component{
                 idProducto: idProducto
             }
         }).then(response => {
-            console.log(response.data[0]);
             for(let i = 0; i < response.data[0].length; i++){
                 this.setState({
                     empleados: {
@@ -170,7 +169,6 @@ class Supervision extends React.Component{
     }
 
     botonEstado(estado){
-        console.log(estado);
         if(estado == 'conectado'){
             return <Button className='boton-conectado' disabled><FontAwesomeIcon icon={faHeadset} /></Button>
         } else if(estado == 'pausa'){
@@ -196,7 +194,6 @@ class Supervision extends React.Component{
                     </thead>
                     <tbody>
                         {Object.keys(this.state.empleados).map((empleado) => {
-                            {console.log(this.state.empleados[empleado])}
                             return(
                                 <tr key={this.state.empleados[empleado].idEmpleado}>
                                     <td>{this.state.empleados[empleado].usuario}</td>

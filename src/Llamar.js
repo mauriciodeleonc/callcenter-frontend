@@ -320,11 +320,9 @@ class Llamar extends React.Component{
         event.preventDefault();
         axios.get(`/clientes/next/${this.state.clienteBuscar}`).then((res) => {
             const clienteInfo = res.data.data.cliente;
-            console.log(clienteInfo);
             let gestiones = clienteInfo.Creditos.flatMap(credito => {
                 return credito.Gestiones;
             });
-            console.log(gestiones);
             gestiones = gestiones.sort((a, b) => (new Date(b.createdAt).getTime() / 1000) - (new Date(a.createdAt).getTime() / 1000));
             this.setState({
                 cliente: {
@@ -741,7 +739,7 @@ class Llamar extends React.Component{
                                                             this.state.gestiones.map(gestion => {
                                                                 let fechaGestionCompleta = new Date(Date.parse(gestion.createdAt));
                                                                 let fechaGestion =  fechaGestionCompleta.getDate() + "/" + (fechaGestionCompleta.getMonth() + 1) + "/" + fechaGestionCompleta.getFullYear();
-                                                                
+                                                                let fechaPromesa = '';
                                                                 let fechaPromesaCompleta = '';
                                                                 if(gestion.Promesa && gestion.Promesa !== null && gestion.Promesa.fecha && gestion.Promesa.fecha !== null){
                                                                     fechaPromesaCompleta = new Date(Date.parse(gestion.Promesa.fecha));

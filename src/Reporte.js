@@ -19,7 +19,9 @@ class Reporte extends React.Component{
         this.state = {
             gestiones: [],
             fileName: '',
-            excel: ''
+            excel: '',
+            fechaInicioDescarga: '',
+            fechaFinDescarga: ''
         }
 
         this.getGestiones = this.getGestiones.bind(this);
@@ -29,6 +31,8 @@ class Reporte extends React.Component{
         this.handleAgregarGestiones = this.handleAgregarGestiones.bind(this);
         this.handleFileChosen = this.handleFileChosen.bind(this);
         this.downloadExcel = this.downloadExcel.bind(this);
+        this.handleFechaFinDescarga = this.handleFechaFinDescarga.bind(this);
+        this.handleFechaInicioDescarga = this.handleFechaInicioDescarga.bind(this);
     }
 
     getGestiones(idCartera){
@@ -60,7 +64,6 @@ class Reporte extends React.Component{
     handleFileChosen(file){
        //console.log(typeof idProducto);
         readXlsxFile(file).then((rows) => {
-            console.log(rows);
             for(let i = 1; i < rows.length; i++){
                 let ejecutivo = rows[i][0];
                 if(ejecutivo === null){
@@ -151,9 +154,24 @@ class Reporte extends React.Component{
     downloadExcel(){
         const idCartera = this.props.match.params.nombre.split('+')[1];
         const nombre = this.props.match.params.nombre.split('+')[0];
+        if(this.state.fechaInicioDescarga === '' || this.state.fechaFinDescarga === ''){
+            return alert("Por favor ingresa ambas fechas");
+        }
+        const date1 = new Date(Date.parse(this.state.fechaInicioDescarga));
+        const date2 = new Date(Date.parse(this.state.fechaFinDescarga));
+        const diffTime = Math.abs(date2 - date1);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+        if(date2 < date1)
+            return alert("Las fechas estan al revés");
+        if(diffDays > 500){
+            return alert("Por favor escoja un rango menor a 1 año y medio");
+        }
+        let dia1 = encodeURI(date1.getDate() + "-" + (date1.getMonth() + 1) + "-" + date1.getFullYear());
+        let dia2 = encodeURI(date2.getDate() + "-" + (date2.getMonth() + 1) + "-" + date2.getFullYear());
+
         const configExcel = {
             method: 'get',
-            url: `/gestiones/excel/${idCartera}`,
+            url: `/gestiones/excel/${idCartera}?fechaHoraInicio=${dia1}&fechaHoraFin=${dia2}`,
             responseType: 'arraybuffer',
         }
         axios(configExcel).then((responseExcel) => {
@@ -168,16 +186,36 @@ class Reporte extends React.Component{
         })
         .catch((error) => console.log(error));
     }
+    handleFechaInicioDescarga(event){this.setState({fechaInicioDescarga: event.target.value});}
+    handleFechaFinDescarga(event){this.setState({fechaFinDescarga: event.target.value});}
+
     render(){
         let today = new Date();
         let date = today.getDate() + '/' +(today.getMonth() + 1) + '/' + today.getFullYear() + '/' + today.getHours() + '-' + today.getMinutes();
         let fileName = (this.props.match.params.nombre.split('+')[0]).charAt(0).toUpperCase() + (this.props.match.params.nombre.split('+')[0]).slice(1) + '-' + date;
-        console.log(this.state);
         return(
             <>
                 {(this.props.usuario === 'Supervisor') ?
                 <>
                 <h1>{(this.props.match.params.nombre.split('+')[0]).charAt(0).toUpperCase() + (this.props.match.params.nombre.split('+')[0]).slice(1)}</h1>
+                <Form.Group controlId="fechaInicio">
+                    <Form.Label><b>Fecha de inicio:</b></Form.Label>
+                    <Form.Control 
+                        type="date" 
+                        value={this.state.fechaInicioDescarga} 
+                        onChange={this.handleFechaInicioDescarga}
+                        required
+                    />
+                </Form.Group>
+                <Form.Group controlId="fechaFin">
+                    <Form.Label><b>Fecha fin:</b></Form.Label>
+                    <Form.Control 
+                        type="date" 
+                        value={this.state.fechaFinDescarga} 
+                        onChange={this.handleFechaFinDescarga}
+                        required
+                    />
+                </Form.Group>
                 <Button className='boton-morado boton-login mb-2' onClick={this.downloadExcel}>Descargar reporte</Button>
                 <Form 
                     onSubmit={this.handleAgregarGestiones}

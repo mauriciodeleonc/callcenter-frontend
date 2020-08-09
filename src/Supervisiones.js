@@ -191,7 +191,6 @@ class Supervisiones extends React.Component{
                         <h1>Supervisiones</h1>
                             <Row>
                             {Object.keys(this.state.carteras).map((cartera) => {
-                                {console.log(this.state.carteras)}
                                 return (
                                     <Col md={3} className='d-flex justify-content-center' key={cartera}>
                                         <Card className='equipo'>

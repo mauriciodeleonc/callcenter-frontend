@@ -26,7 +26,6 @@ class AgregarCartera extends React.Component {
   
     handleAgregarCartera(event){
       event.preventDefault();
-      console.log(this.state.excel);
       this.props.handleFileChosen(this.state.excel, this.state.nombre);
       this.props.onHide();
     }
@@ -97,7 +96,6 @@ class Carteras extends React.Component{
 
     getCarteras(){
         axios.get('/carteras').then(response => {
-            console.log(response);
             this.setState({
                 carteras: response.data.data
             });
@@ -113,7 +111,6 @@ class Carteras extends React.Component{
             url: '/carteras',
             data: data
         };
-        console.log(this);
         axios(config)
             .then((response) => {
                 if(response.data.data.corrupted.length > 0){

@@ -419,7 +419,6 @@ class Usuarios extends React.Component{
     }
 
     borrarUsuario(empleadoBorrar){
-      console.log(empleadoBorrar);
       axios.delete(`/empleados/${empleadoBorrar.usuario}`).then(response => {
         this.getEmpleados();
       });
