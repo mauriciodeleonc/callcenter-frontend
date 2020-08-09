@@ -624,11 +624,11 @@ class Llamar extends React.Component{
                                                                         <td>{credito.numCredito}</td>
                                                                         <td>{credito.bucketInicial + ' - ' + credito.bucketFinal}</td>
                                                                         <td>{fechaUltimoPago}</td>
-                                                                        <td>{credito.cuota}</td>
-                                                                        <td>{credito.mejora}</td>
-                                                                        <td>{credito.cura}</td>
-                                                                        <td>{credito.sdoTotal}</td>
-                                                                        <td>{credito.sdoLiq}</td>
+                                                                        <td>{(new Intl.NumberFormat().format(credito.cuota))}</td>
+                                                                        <td>{(new Intl.NumberFormat().format(credito.mejora))}</td>
+                                                                        <td>{(new Intl.NumberFormat().format(credito.cura))}</td>
+                                                                        <td>{(new Intl.NumberFormat().format(credito.sdoTotal))}</td>
+                                                                        <td>{(new Intl.NumberFormat().format(credito.sdoLiq))}</td>
                                                                         <td>{credito.frecuencia}</td>
                                                                     </tr>
                                                                 );
@@ -741,9 +741,12 @@ class Llamar extends React.Component{
                                                             this.state.gestiones.map(gestion => {
                                                                 let fechaGestionCompleta = new Date(Date.parse(gestion.createdAt));
                                                                 let fechaGestion =  fechaGestionCompleta.getDate() + "/" + (fechaGestionCompleta.getMonth() + 1) + "/" + fechaGestionCompleta.getFullYear();
-
-                                                                let fechaPromesaCompleta = new Date(Date.parse(gestion.Promesa.fecha));
-                                                                let fechaPromesa = fechaPromesaCompleta.getDate() + "/" + (fechaPromesaCompleta.getMonth() + 1) + "/" + fechaPromesaCompleta.getFullYear();
+                                                                
+                                                                let fechaPromesaCompleta = '';
+                                                                if(gestion.Promesa && gestion.Promesa !== null && gestion.Promesa.fecha && gestion.Promesa.fecha !== null){
+                                                                    fechaPromesaCompleta = new Date(Date.parse(gestion.Promesa.fecha));
+                                                                    fechaPromesa = fechaPromesaCompleta.getDate() + "/" + (fechaPromesaCompleta.getMonth() + 1) + "/" + fechaPromesaCompleta.getFullYear();
+                                                                }
                                                                 
                                                                 return(
                                                                     <tr key={gestion.idGestion}>
@@ -757,7 +760,7 @@ class Llamar extends React.Component{
                                                                         <td>{gestion.codigoResultado}</td>
                                                                         <td>{gestion.codigoContacto}</td>
                                                                         <td>{fechaPromesa == 'NaN/NaN/NaN' ? '' : fechaPromesa}</td>
-                                                                        <td>{gestion.Promesa.monto}</td>
+                                                                        <td>{(new Intl.NumberFormat().format(gestion.Promesa.monto))}</td>
                                                                     </tr>
                                                                 );
                                                             })

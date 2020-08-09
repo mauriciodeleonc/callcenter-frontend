@@ -151,11 +151,11 @@ class Cartera extends React.Component{
                                         <td>{fechaOriginacion == 'NaN/NaN/NaN' ? '' : fechaOriginacion}</td>
                                         <td>{fila.bucketInicial == 'null' ? '' : fila.bucketInicial}</td>
                                         <td>{fila.bucketFinal == 'null' ? '' : fila.bucketFinal}</td>
-                                        <td>{fila.cuota == 'null' ? '' : fila.cuota}</td>
-                                        <td>{fila.mejora == 'null' ? '' : fila.mejora}</td>
-                                        <td>{fila.cura == 'null' ? '' : fila.cura}</td>
-                                        <td>{fila.sdoTotal == 'null' ? '' : fila.sdoTotal}</td>
-                                        <td>{fila.sdoLiq == 'null' ? '' : fila.sdoLiq}</td>
+                                        <td>{fila.cuota == 'null' ? '' : (new Intl.NumberFormat().format(fila.cuota))}</td>
+                                        <td>{fila.mejora == 'null' ? '' : (new Intl.NumberFormat().format(fila.mejora))}</td>
+                                        <td>{fila.cura == 'null' ? '' : (new Intl.NumberFormat().format(fila.cura))}</td>
+                                        <td>{fila.sdoTotal == 'null' ? '' : (new Intl.NumberFormat().format(fila.sdoTotal))}</td>
+                                        <td>{fila.sdoLiq == 'null' ? '' : (new Intl.NumberFormat().format(fila.sdoLiq))}</td>
                                         <td>{fila.frecuencia == 'null' ? '' : fila.frecuencia}</td>
                                         <td>{fila.plazo == 'null' ? '' : fila.plazo}</td>
                                         <td>{ultimoPago == 'NaN/NaN/NaN' ? '' : ultimoPago}</td>
