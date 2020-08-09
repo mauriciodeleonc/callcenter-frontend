@@ -6,6 +6,7 @@ import axios from 'axios';
 import readXlsxFile from 'read-excel-file';
 import LoginRedirect from './LoginRedirect';
 
+import XLSX from 'xlsx';
 
 import ReactExport from "react-data-export";
 
@@ -166,15 +167,15 @@ class Reporte extends React.Component{
         if(diffDays > 500){
             return alert("Por favor escoja un rango menor a 1 año y medio");
         }
-        let dia1 = encodeURI(date1.getDate() + "-" + (date1.getMonth() + 1) + "-" + date1.getFullYear());
-        let dia2 = encodeURI(date2.getDate() + "-" + (date2.getMonth() + 1) + "-" + date2.getFullYear());
+        let dia1 = encodeURI(date1.getFullYear() + "-" + (date1.getMonth() + 1) + "-" + date1.getDate());
+        let dia2 = encodeURI(date2.getFullYear() + "-" + (date2.getMonth() + 1) + "-" + date2.getDate());
 
         const configExcel = {
             method: 'get',
             url: `/gestiones/excel/${idCartera}?fechaHoraInicio=${dia1}&fechaHoraFin=${dia2}`,
             responseType: 'arraybuffer',
         }
-        axios(configExcel).then((responseExcel) => {
+        /*axios(configExcel).then((responseExcel) => {
             const url = window.URL.createObjectURL(new Blob([responseExcel.data]));
             const link = document.createElement('a');
             link.href = url;
@@ -184,7 +185,15 @@ class Reporte extends React.Component{
             document.body.appendChild(link);
             link.click();
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.log(error));*/
+        axios.get(`/gestiones/excel/${idCartera}?fechaHoraInicio=${dia1}&fechaHoraFin=${dia2}`).then((res) => {
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(res.data.data);
+            XLSX.utils.book_append_sheet(wb, ws, "Reporte");
+            /* generate XLSX file and send to client */
+            XLSX.writeFile(wb, "reporte.xlsx")
+        });
     }
     handleFechaInicioDescarga(event){this.setState({fechaInicioDescarga: event.target.value});}
     handleFechaFinDescarga(event){this.setState({fechaFinDescarga: event.target.value});}
