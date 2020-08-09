@@ -24,7 +24,7 @@ class Navigation extends React.Component{
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="flex-column">
                         {
-                            this.props.usuario === 'admin' &&
+                            this.props.usuario === 'Admin' &&
                             <>
                                 <Link to='/usuarios'>
                                     <li>
@@ -46,7 +46,7 @@ class Navigation extends React.Component{
                             </>
                         }
                         {
-                            this.props.usuario === 'ejecutivo' && 
+                            this.props.usuario === 'Ejecutivo' && 
                             <>
                                 <Link to='/llamar'>
                                     <li>

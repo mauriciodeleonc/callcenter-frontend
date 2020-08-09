@@ -229,8 +229,11 @@ class Reporte extends React.Component{
                                 let fechaGestionCompleta = new Date(Date.parse(gestion.createdAt));
                                 let fechaGestion = fechaGestionCompleta.getDate() + "/" + (fechaGestionCompleta.getMonth() + 1) + "/" + fechaGestionCompleta.getFullYear();
                                 let tiempoGestion = fechaGestionCompleta.getHours() + ":" + fechaGestionCompleta.getMinutes() + ":" + fechaGestionCompleta.getSeconds()
-                                let fechaPromesa = new Date(Date.parse(gestion.Promesa.fecha));
-                                fechaPromesa = fechaPromesa.getDate() + "/" + (fechaPromesa.getMonth() + 1) + "/" + fechaPromesa.getFullYear();
+                                let fechaPromesa = '';
+                                if(gestion.Promesa && gestion.Promesa !== null && gestion.Promesa.fecha && gestion.Promesa.fecha !== null){
+                                    fechaPromesa = new Date(Date.parse(gestion.Promesa.fecha));
+                                    fechaPromesa = fechaPromesa.getDate() + "/" + (fechaPromesa.getMonth() + 1) + "/" + fechaPromesa.getFullYear();
+                                }
                                 return (
                                     <tr key={gestion.idGestion}>
                                         <td>{(this.props.match.params.nombre.split('+')[0]).charAt(0).toUpperCase() + (this.props.match.params.nombre.split('+')[0]).slice(1)}</td>
