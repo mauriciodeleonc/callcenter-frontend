@@ -110,7 +110,7 @@ class Carteras extends React.Component{
         data.append('nombre', titulo);
         const config = {
             method: 'post',
-            url: 'http://localhost:4000/carteras',
+            url: '/carteras',
             data: data
         };
         console.log(this);
@@ -119,7 +119,7 @@ class Carteras extends React.Component{
                 if(response.data.data.corrupted.length > 0){
                     const configExcel = {
                         method: 'post',
-                        url: 'http://localhost:4000/carteras/recovery',
+                        url: '/carteras/recovery',
                         data: response.data.data.corrupted,
                         /*headers:
                             {

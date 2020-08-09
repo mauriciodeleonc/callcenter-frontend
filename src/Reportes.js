@@ -17,21 +17,11 @@ class Reportes extends React.Component{
         this.getCarteras = this.getCarteras.bind(this);
     }
 
-    getCarteras(){
-        axios.get('/getCantGestionesProducto').then(response => {
-            //console.log(response);
-            for(let i = 0; i < response.data[0].length; i++){
-                this.setState({
-                    carteras: {
-                        ...this.state.carteras,
-                        [response.data[0][i].nombre]: {
-                            cantGestiones: response.data[0][i].gestiones,
-                            idCartera: response.data[0][i].idProducto
-                        }
-                    }
-                });
-            }
-            //console.log(this.state.carteras);
+    getCarteras() {
+        axios.get('/gestiones/cards').then(response => {
+            this.setState({
+                carteras: response.data.data
+            });
         });
     }
 
@@ -44,22 +34,21 @@ class Reportes extends React.Component{
             <>
                 <h1>Reportes</h1>
                 <Row>
-                    {Object.keys(this.state.carteras).map((cartera) => {
-                        {console.log(this.state.carteras)}
+                    {this.state.carteras.map((cartera) => {
                         return (
-                            <Col md={3} className='d-flex justify-content-center' key={cartera}>
+                            <Col md={3} className='d-flex justify-content-center' key={cartera.idCartera}>
                                 <Card className='equipo'>
                                     <Card.Body className='text-center'>
-                                        <Card.Title><b>{cartera.charAt(0).toUpperCase() + cartera.slice(1)}</b></Card.Title>
+                                        <Card.Title><b>{cartera.nombre.charAt(0).toUpperCase() + cartera.nombre.slice(1)}</b></Card.Title>
                                         <Card.Text>
                                             <Row style={{marginTop: '40px'}}>
                                                 <Col>
                                                     <Button className='boton-morado-circular' disabled><FontAwesomeIcon icon={faFileAlt} /></Button>
-                                                    <p>{this.state.carteras[cartera].cantGestiones} gestiones</p>
+                                                    <p>{cartera.n} gestiones</p>
                                                 </Col>
                                             </Row>
                                         </Card.Text>
-                                        <Link to={`/reportes/${cartera}+${this.state.carteras[cartera].idCartera}`}>
+                                        <Link to={`/reportes/${cartera.nombre}+${cartera.idCartera}`}>
                                             <Button className='boton-morado' block>Ver más +</Button>
                                         </Link>
                                     </Card.Body>
