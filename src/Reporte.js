@@ -296,7 +296,7 @@ class Reporte extends React.Component{
                                         <td>{gestion.codigoContacto}</td>
                                         <td>{gestion.comentarios}</td>
                                         <td>{fechaPromesa === 'NaN/NaN/NaN' ? '' : fechaPromesa}</td>
-                                        <td>{gestion.Promesa && gestion.Promesa !== null ? (new Intl.NumberFormat().format(gestion.Promesa.monto)) : ''}</td>
+                                        <td>{(gestion.Promesa && gestion.Promesa !== null) ? (new Intl.NumberFormat().format(gestion.Promesa.monto)) : ''}</td>
                                     </tr>
                                 );
                             });

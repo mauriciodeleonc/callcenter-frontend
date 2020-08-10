@@ -758,7 +758,7 @@ class Llamar extends React.Component{
                                                                         <td>{gestion.codigoResultado}</td>
                                                                         <td>{gestion.codigoContacto}</td>
                                                                         <td>{fechaPromesa == 'NaN/NaN/NaN' ? '' : fechaPromesa}</td>
-                                                                        <td>{(new Intl.NumberFormat().format(gestion.Promesa.monto))}</td>
+                                                                        <td>{(gestion.Promesa && gestion.Promesa !== null && gestion.Promesa.monto && gestion.Promesa.monto !== null)  ? (new Intl.NumberFormat().format(gestion.Promesa.monto)) : ''}</td>
                                                                     </tr>
                                                                 );
                                                             })
