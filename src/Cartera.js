@@ -49,11 +49,11 @@ class Cartera extends React.Component{
     handleExcel(event){this.setState({excel: event.target.files[0]});}
 
     getCartera(idCartera){
-        axios.get(`/carteras/${idCartera}`).then(response => {
+        /*axios.get(`/carteras/${idCartera}`).then(response => {
             this.setState({
                 filas: response.data.data.cartera.Creditos
             });
-        })
+        })*/
     }
 
     componentDidMount(){

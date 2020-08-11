@@ -37,11 +37,11 @@ class Reporte extends React.Component{
     }
 
     getGestiones(idCartera){
-        axios.get(`/gestiones/${idCartera}`).then(response => {
+        /*axios.get(`/gestiones/${idCartera}`).then(response => {
             this.setState({
                 gestiones: response.data.data
             });
-        });
+        });*/
     }
 
     updateTime(){
@@ -164,8 +164,8 @@ class Reporte extends React.Component{
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
         if(date2 < date1)
             return alert("Las fechas estan al revés");
-        if(diffDays > 500){
-            return alert("Por favor escoja un rango menor a 1 año y medio");
+        if(diffDays > 31){
+            return alert("Por favor escoja un rango menor a 1 mes");
         }
         let dia1 = encodeURI(date1.getFullYear() + "-" + (date1.getMonth() + 1) + "-" + date1.getDate());
         let dia2 = encodeURI(date2.getFullYear() + "-" + (date2.getMonth() + 1) + "-" + date2.getDate());
