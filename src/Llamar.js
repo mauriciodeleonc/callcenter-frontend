@@ -333,7 +333,7 @@ class Llamar extends React.Component{
                 },
                 clienteReady: true,
                 creditos: clienteInfo.Creditos,
-                referencias: clienteInfo.Referencias,
+                referencias: new Array(clienteInfo.Referencias),
                 gestiones
             })
         });
@@ -721,6 +721,7 @@ class Llamar extends React.Component{
                                                 <Table striped hover responsive className='gestiones-table'>
                                                     <thead>
                                                         <tr>
+                                                            <th>Atendió</th>
                                                             <th>Crédito</th>
                                                             <th>Tel. Marcado</th>
                                                             <th>Fecha</th>
@@ -748,6 +749,7 @@ class Llamar extends React.Component{
                                                                 
                                                                 return(
                                                                     <tr key={gestion.idGestion}>
+                                                                        <td>{gestion.empleadoAtendio}</td>
                                                                         <td>{gestion.GestionCredito.numCredito}</td>
                                                                         <td>{gestion.numeroContacto}</td>
                                                                         <td>{fechaGestion  == 'NaN/NaN/NaN' ? '' : fechaGestion}</td>
