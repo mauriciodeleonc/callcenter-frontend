@@ -570,8 +570,7 @@ class Llamar extends React.Component{
                             <h1>Llamar</h1>
                             <Container fluid>
                                 <Row className='d-flex justify-content-between'>
-                                    <Col md={9} className='pl-0' style={{borderRightColor: 'rgba(0,0,0,.1)', borderRightStyle: 'solid', borderRightWidth: 'thin'}}>
-                                        {this.state.estadoEjecutivo === 'manual' &&
+                                    <Col md={8} className='pl-0' style={{borderRightColor: 'rgba(0,0,0,.1)', borderRightStyle: 'solid', borderRightWidth: 'thin'}}>
                                         <Form onSubmit={this.buscarCliente}>
                                             <Form.Label>Buscar cliente por número de crédito</Form.Label>
                                             <InputGroup controlId="telefonoNuevo" style={{marginBottom: 20, width: '50%'}}>
@@ -589,10 +588,9 @@ class Llamar extends React.Component{
                                                 </InputGroup.Append>
                                             </InputGroup>
                                         </Form>
-                                        }
                                         <h2>Datos del cliente</h2>
                                         <Row className='d-flex justify-content-between'>
-                                            <Col md={8}>
+                                            <Col md={12}>
                                                 <p className='mb-0'><b>Nombre</b></p>
                                                 <p>{this.state.clienteReady ? this.state.cliente.nombre : <></>}</p>
                                                 <p>{this.state.clienteReady ? this.state.cliente.rfc : <></>}</p>
@@ -622,11 +620,11 @@ class Llamar extends React.Component{
                                                                         <td>{credito.numCredito}</td>
                                                                         <td>{credito.bucketInicial + ' - ' + credito.bucketFinal}</td>
                                                                         <td>{fechaUltimoPago}</td>
-                                                                        <td>{(new Intl.NumberFormat().format(credito.cuota))}</td>
-                                                                        <td>{(new Intl.NumberFormat().format(credito.mejora))}</td>
-                                                                        <td>{(new Intl.NumberFormat().format(credito.cura))}</td>
-                                                                        <td>{(new Intl.NumberFormat().format(credito.sdoTotal))}</td>
-                                                                        <td>{(new Intl.NumberFormat().format(credito.sdoLiq))}</td>
+                                                                        <td>{(new Intl.NumberFormat("en-IN", {style: "currency", currency: "MXN"}).format(credito.cuota))}</td>
+                                                                        <td>{(new Intl.NumberFormat("en-IN", {style: "currency", currency: "MXN"}).format(credito.mejora))}</td>
+                                                                        <td>{(new Intl.NumberFormat("en-IN", {style: "currency", currency: "MXN"}).format(credito.cura))}</td>
+                                                                        <td>{(new Intl.NumberFormat("en-IN", {style: "currency", currency: "MXN"}).format(credito.sdoTotal))}</td>
+                                                                        <td>{(new Intl.NumberFormat("en-IN", {style: "currency", currency: "MXN"}).format(credito.sdoLiq))}</td>
                                                                         <td>{credito.frecuencia}</td>
                                                                     </tr>
                                                                 );
@@ -640,7 +638,140 @@ class Llamar extends React.Component{
                                                     </tbody>
                                                 </Table>
                                             </Col>
-                                            <Col md={4}>
+                                        </Row>
+                                        <Row>
+                                            <Col md={12}>
+                                            <p className='mb-2'><b>Gestiones Anteriores:</b></p>
+                                                <Table striped hover responsive className='gestiones-table'>
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Atendió</th>
+                                                            <th>Crédito</th>
+                                                            <th>Tel. Marcado</th>
+                                                            <th>Fecha</th>
+                                                            {/*<th>Gestor</th>
+                                                            <th>Contesto</th>*/}
+                                                            <th>Comentario</th>
+                                                            <th>c. Acción</th>
+                                                            <th>c. Resultado</th>
+                                                            <th>c. Contacto</th>
+                                                            <th>Fecha PP.</th>
+                                                            <th>Monto PP.</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        { (this.state.clienteReady) ? 
+                                                            this.state.gestiones.map(gestion => {
+                                                                let fechaGestionCompleta = new Date(Date.parse(gestion.createdAt));
+                                                                let fechaGestion =  fechaGestionCompleta.getDate() + "/" + (fechaGestionCompleta.getMonth() + 1) + "/" + fechaGestionCompleta.getFullYear();
+                                                                let fechaPromesa = '';
+                                                                let fechaPromesaCompleta = '';
+                                                                if(gestion.Promesa && gestion.Promesa !== null && gestion.Promesa.fecha && gestion.Promesa.fecha !== null){
+                                                                    fechaPromesaCompleta = new Date(Date.parse(gestion.Promesa.fecha));
+                                                                    fechaPromesa = fechaPromesaCompleta.getDate() + "/" + (fechaPromesaCompleta.getMonth() + 1) + "/" + fechaPromesaCompleta.getFullYear();
+                                                                }
+                                                                
+                                                                return(
+                                                                    <tr key={gestion.idGestion}>
+                                                                        <td>{gestion.empleadoAtendio}</td>
+                                                                        <td>{gestion.GestionCredito.numCredito}</td>
+                                                                        <td>{gestion.numeroContacto}</td>
+                                                                        <td>{fechaGestion  == 'NaN/NaN/NaN' ? '' : fechaGestion}</td>
+                                                                        {/*<td>{gestion.empleadoAsignado}</td>
+                                                                        <td>{gestion.nombreMarcado}</td>*/}
+                                                                        <td>{gestion.comentarios}</td>
+                                                                        <td>{gestion.codigoAccion}</td>
+                                                                        <td>{gestion.codigoResultado}</td>
+                                                                        <td>{gestion.codigoContacto}</td>
+                                                                        <td>{fechaPromesa == 'NaN/NaN/NaN' ? '' : fechaPromesa}</td>
+                                                                        <td>{(gestion.Promesa && gestion.Promesa !== null && gestion.Promesa.monto && gestion.Promesa.monto !== null)  ? (new Intl.NumberFormat("en-IN", {style: "currency", currency: "MXN"}).format(gestion.Promesa.monto)) : ''}</td>
+                                                                    </tr>
+                                                                );
+                                                            })
+                                                            :
+                                                            <>
+                                                            </>
+                                                        }
+                                                    </tbody>
+                                                </Table>
+                                                {/*
+                                                <Button 
+                                                    className='boton-morado' 
+                                                    onClick={() => this.setState({modalShow: true})}
+                                                    style={{
+                                                    margin: '10px 0 30px 0'
+                                                    }}
+                                                >
+                                                    Insertar nueva gestión
+                                                </Button>
+                                                */}
+                                            </Col>
+                                        </Row>
+                                    </Col>
+                                    <Col md={4} className='px-3'>
+                                        <div style={{position: 'sticky', top: '10%'}}>
+                                        <Row style={{marginBottom: 10}}>
+                                            <Col 
+                                                md={12} 
+                                                style={{display: 'inline-block'}}
+                                                className='d-flex justify-content-center'
+                                            >
+                                                <FontAwesomeIcon 
+                                                    icon={faPhoneAlt} 
+                                                    size='lg' 
+                                                    style={{marginTop: 10, marginRight: 5}}
+                                                />
+                                                <input
+                                                    onChange={this.handleTelefonoMarcar}
+                                                    value={this.state.telefonoMarcar}
+                                                    type="number"
+                                                    name="phone"
+                                                    maxLength="10"
+                                                    style={{
+                                                        fontSize: 'x-large',
+                                                        color: '#2F2F2F',
+                                                        borderStyle: 'solid',
+                                                        backgroundColor: 'transparent',
+                                                        fontWeight: 'bold',
+                                                        width: '200px',
+                                                        borderTop: 'none',
+                                                        borderLeft: 'none',
+                                                        borderRight: 'none',
+                                                        textAlign: 'center'
+                                                    }}
+                                                    ref={(input) => { this.nameInput = input; }} 
+                                                />
+                                                {/*<FontAwesomeIcon 
+                                                    icon={faBackspace} 
+                                                    size='lg' 
+                                                    onClick={() => this.setState({telefonoMarcar: this.state.telefonoMarcar.slice(0, -1)})} 
+                                                    style={{marginTop: 8}}
+                                                />*/}
+                                            </Col>
+                                        </Row>
+                                        <Row style={{marginBottom: 10}}>
+                                            <Col 
+                                                md={12} 
+                                                style={{display: 'inline-block'}}
+                                                className='d-flex justify-content-center'
+                                            >
+                                                <FontAwesomeIcon 
+                                                    icon={faUserAlt} 
+                                                    size='lg' 
+                                                    style={{marginTop: 8, marginRight: 5}}
+                                                />
+                                                <p className='text-center'><b>{this.state.referenciaMarcar}</b></p>
+                                            </Col>
+                                        </Row>
+                                        <Row style={{marginBottom: 10}}>
+                                            <Col>
+                                                <p style={{textAlign: 'center'}}>
+                                                    Tiempo de llamada: {this.state.minutosLlamada}m {this.state.segundosLamada}s
+                                                </p>      
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col md={12}>
                                                 <p className='mb-2'><b>Teléfonos:</b></p>
                                                 <Table striped hover responsive className='phones-table'>
                                                     <thead>
@@ -716,173 +847,6 @@ class Llamar extends React.Component{
                                             </Col>
                                         </Row>
                                         <Row>
-                                            <Col md={12}>
-                                            <p className='mb-2'><b>Gestiones Anteriores:</b></p>
-                                                <Table striped hover responsive className='gestiones-table'>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Atendió</th>
-                                                            <th>Crédito</th>
-                                                            <th>Tel. Marcado</th>
-                                                            <th>Fecha</th>
-                                                            {/*<th>Gestor</th>
-                                                            <th>Contesto</th>*/}
-                                                            <th>Comentario</th>
-                                                            <th>c. Acción</th>
-                                                            <th>c. Resultado</th>
-                                                            <th>c. Contacto</th>
-                                                            <th>Fecha PP.</th>
-                                                            <th>Monto PP.</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        { (this.state.clienteReady) ? 
-                                                            this.state.gestiones.map(gestion => {
-                                                                let fechaGestionCompleta = new Date(Date.parse(gestion.createdAt));
-                                                                let fechaGestion =  fechaGestionCompleta.getDate() + "/" + (fechaGestionCompleta.getMonth() + 1) + "/" + fechaGestionCompleta.getFullYear();
-                                                                let fechaPromesa = '';
-                                                                let fechaPromesaCompleta = '';
-                                                                if(gestion.Promesa && gestion.Promesa !== null && gestion.Promesa.fecha && gestion.Promesa.fecha !== null){
-                                                                    fechaPromesaCompleta = new Date(Date.parse(gestion.Promesa.fecha));
-                                                                    fechaPromesa = fechaPromesaCompleta.getDate() + "/" + (fechaPromesaCompleta.getMonth() + 1) + "/" + fechaPromesaCompleta.getFullYear();
-                                                                }
-                                                                
-                                                                return(
-                                                                    <tr key={gestion.idGestion}>
-                                                                        <td>{gestion.empleadoAtendio}</td>
-                                                                        <td>{gestion.GestionCredito.numCredito}</td>
-                                                                        <td>{gestion.numeroContacto}</td>
-                                                                        <td>{fechaGestion  == 'NaN/NaN/NaN' ? '' : fechaGestion}</td>
-                                                                        {/*<td>{gestion.empleadoAsignado}</td>
-                                                                        <td>{gestion.nombreMarcado}</td>*/}
-                                                                        <td>{gestion.comentarios}</td>
-                                                                        <td>{gestion.codigoAccion}</td>
-                                                                        <td>{gestion.codigoResultado}</td>
-                                                                        <td>{gestion.codigoContacto}</td>
-                                                                        <td>{fechaPromesa == 'NaN/NaN/NaN' ? '' : fechaPromesa}</td>
-                                                                        <td>{(gestion.Promesa && gestion.Promesa !== null && gestion.Promesa.monto && gestion.Promesa.monto !== null)  ? (new Intl.NumberFormat().format(gestion.Promesa.monto)) : ''}</td>
-                                                                    </tr>
-                                                                );
-                                                            })
-                                                            :
-                                                            <>
-                                                            </>
-                                                        }
-                                                    </tbody>
-                                                </Table>
-                                                <Button 
-                                                    className='boton-morado' 
-                                                    onClick={() => this.setState({modalShow: true})}
-                                                    style={{
-                                                    margin: '10px 0 30px 0'
-                                                    }}
-                                                >
-                                                    Insertar nueva gestión
-                                                </Button>
-                                            </Col>
-                                        </Row>
-                                    </Col>
-                                    <Col md={3} className='pl-5 pr-0'>
-                                        <div style={{position: 'sticky', top: '10%'}}>
-                                        <Row style={{marginBottom: 10}}>
-                                            <Col 
-                                                md={12} 
-                                                style={{display: 'inline-block'}}
-                                                className='d-flex justify-content-center'
-                                            >
-                                                <FontAwesomeIcon 
-                                                    icon={faPhoneAlt} 
-                                                    size='lg' 
-                                                    style={{marginTop: 10, marginRight: 5}}
-                                                />
-                                                <input
-                                                    onChange={this.handleTelefonoMarcar}
-                                                    value={this.state.telefonoMarcar}
-                                                    type="number"
-                                                    name="phone"
-                                                    maxLength="10"
-                                                    style={{
-                                                        fontSize: 'x-large',
-                                                        color: '#2F2F2F',
-                                                        borderStyle: 'solid',
-                                                        backgroundColor: 'transparent',
-                                                        fontWeight: 'bold',
-                                                        width: '200px',
-                                                        borderTop: 'none',
-                                                        borderLeft: 'none',
-                                                        borderRight: 'none',
-                                                        textAlign: 'center'
-                                                    }}
-                                                    ref={(input) => { this.nameInput = input; }} 
-                                                />
-                                                {/*<FontAwesomeIcon 
-                                                    icon={faBackspace} 
-                                                    size='lg' 
-                                                    onClick={() => this.setState({telefonoMarcar: this.state.telefonoMarcar.slice(0, -1)})} 
-                                                    style={{marginTop: 8}}
-                                                />*/}
-                                            </Col>
-                                        </Row>
-                                        <Row style={{marginBottom: 10}}>
-                                            <Col 
-                                                md={12} 
-                                                style={{display: 'inline-block'}}
-                                                className='d-flex justify-content-center'
-                                            >
-                                                <FontAwesomeIcon 
-                                                    icon={faUserAlt} 
-                                                    size='lg' 
-                                                    style={{marginTop: 8, marginRight: 5}}
-                                                />
-                                                <p className='text-center'><b>{this.state.referenciaMarcar}</b></p>
-                                            </Col>
-                                        </Row>
-                                        <Row style={{marginBottom: 10}}>
-                                            <Col>
-                                                <p style={{textAlign: 'center'}}>
-                                                    Tiempo de llamada: {this.state.minutosLlamada}m {this.state.segundosLamada}s
-                                                </p>      
-                                            </Col>
-                                        </Row>
-                                        <Row style={{marginBottom: '20px'}}>
-                                            <Col className='text-center'>
-                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('1')} disabled={this.state.marcarDisabled}>1</Button>
-                                            </Col>
-                                            <Col className='text-center'>
-                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('2')} disabled={this.state.marcarDisabled}>2</Button>
-                                            </Col>
-                                            <Col className='text-center'>
-                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('3')} disabled={this.state.marcarDisabled}>3</Button>
-                                            </Col>
-                                        </Row>
-                                        <Row style={{marginBottom: '20px'}}>
-                                            <Col className='text-center'>
-                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('4')} disabled={this.state.marcarDisabled}>4</Button>
-                                            </Col>
-                                            <Col className='text-center'>
-                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('5')} disabled={this.state.marcarDisabled}>5</Button>
-                                            </Col>
-                                            <Col className='text-center'>
-                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('6')} disabled={this.state.marcarDisabled}>6</Button>
-                                            </Col>
-                                        </Row>
-                                        <Row style={{marginBottom: '20px'}}>
-                                            <Col className='text-center'>
-                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('7')} disabled={this.state.marcarDisabled}>7</Button>
-                                            </Col>
-                                            <Col className='text-center'>
-                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('8')} disabled={this.state.marcarDisabled}>8</Button>
-                                            </Col>
-                                            <Col className='text-center'>
-                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('9')} disabled={this.state.marcarDisabled}>9</Button>
-                                            </Col>
-                                        </Row>
-                                        <Row style={{marginBottom: '20px'}}>
-                                            <Col className='text-center'>
-                                                <Button className='boton-numero' onClick={() => this.handleNumeroTelefono('0')} disabled={this.state.marcarDisabled}>0</Button>
-                                            </Col>
-                                        </Row>
-                                        <Row>
                                             <Col className='text-center d-flex justify-content-around'>
                                                 {
                                                     (this.state.minutosLlamada === 0 && this.state.segundosLamada === 0) &&
@@ -902,16 +866,16 @@ class Llamar extends React.Component{
                                         <br></br>
                                         <Row>
                                             <Col className='text-center'>
-                                                <Button className='boton-estado' onClick={this.modoPredictivo} active={this.state.predictivoActive}><FontAwesomeIcon icon={faForward} /></Button>
-                                                <p>Predictivo</p>
+                                                <Button className='boton-estado' onClick={this.modoPredictivo} active={this.state.predictivoActive} disabled><FontAwesomeIcon icon={faForward} /></Button>
+                                                <p className='text-muted'>Predictivo</p>
                                             </Col>
                                             <Col className='text-center'>
                                                 <Button className='boton-estado' onClick={this.modoManual} active={this.state.manualActive}><FontAwesomeIcon icon={faHandPointer} /></Button>
                                                 <p>Manual</p>
                                             </Col>
                                             <Col className='text-center'>
-                                                <Button className='boton-estado' onClick={this.modoPausa} active={this.state.pausaActive}><FontAwesomeIcon icon={faPause} /></Button>
-                                                <p>Pausa</p>
+                                                <Button className='boton-estado' onClick={this.modoPausa} active={this.state.pausaActive} disabled><FontAwesomeIcon icon={faPause} /></Button>
+                                                <p className='text-muted'>Pausa</p>
                                             </Col>
                                         </Row>
                                         </div>

@@ -58,7 +58,7 @@ th, td, tr, thead, .table-responsive{
 
 .creditos-table{
   display: inline-block !important;
-  max-height: 25vh !important;
+  max-height: 30vh !important;
   overflow: auto !important;
 }
 
@@ -253,6 +253,12 @@ th, td, tr, thead, .table-responsive{
   background-color: #2F2F2F ;
   color: white;
   font-weight: bold;
+}
+
+.boton-estado:disabled{
+  border: none;
+  color: darkgray;
+  background-color: #E0E0E0;
 }
 
 .boton-primary:active{
