@@ -570,7 +570,7 @@ class Llamar extends React.Component{
                             <h1>Llamar</h1>
                             <Container fluid>
                                 <Row className='d-flex justify-content-between'>
-                                    <Col md={8} className='pl-0' style={{borderRightColor: 'rgba(0,0,0,.1)', borderRightStyle: 'solid', borderRightWidth: 'thin'}}>
+                                    <Col md={9} className='pl-0' style={{borderRightColor: 'rgba(0,0,0,.1)', borderRightStyle: 'solid', borderRightWidth: 'thin'}}>
                                         <Form onSubmit={this.buscarCliente}>
                                             <Form.Label>Buscar cliente por número de crédito</Form.Label>
                                             <InputGroup controlId="telefonoNuevo" style={{marginBottom: 20, width: '50%'}}>
@@ -708,7 +708,7 @@ class Llamar extends React.Component{
                                             </Col>
                                         </Row>
                                     </Col>
-                                    <Col md={4} className='px-3'>
+                                    <Col md={3} className='px-3'>
                                         <div style={{position: 'sticky', top: '10%'}}>
                                         <Row style={{marginBottom: 10}}>
                                             <Col 
@@ -859,6 +859,7 @@ class Llamar extends React.Component{
                                                 
                                             </Col>
                                         </Row>
+                                        {/*
                                         <br></br>
                                         <Row>
                                             <Col><hr></hr></Col>
@@ -878,6 +879,7 @@ class Llamar extends React.Component{
                                                 <p className='text-muted'>Pausa</p>
                                             </Col>
                                         </Row>
+                                        */ }
                                         </div>
                                     </Col>
                                 </Row>

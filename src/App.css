@@ -45,7 +45,7 @@ th, td, tr, thead, .table-responsive{
 
 .phones-table{
   display: inline-block !important;
-  max-height: 25vh !important;
+  max-height: 40vh !important;
   overflow: auto !important;
 }
 
