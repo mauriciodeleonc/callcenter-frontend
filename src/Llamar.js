@@ -289,7 +289,7 @@ class Llamar extends React.Component{
             pressPause: 0,
             pressPredictivo: 0,
             pressManual: 0,
-            marcarDisabled: true,
+            marcarDisabled: false,
             idUsuario: this.props.idUsuario,
             renderReady: false,
             nombresClientes: [],
@@ -333,7 +333,7 @@ class Llamar extends React.Component{
                 },
                 clienteReady: true,
                 creditos: clienteInfo.Creditos,
-                referencias: new Array(clienteInfo.Referencias),
+                referencias: clienteInfo.Referencias,
                 gestiones
             })
         });
@@ -404,6 +404,7 @@ class Llamar extends React.Component{
                 telCelular: telefono.telefono
             }
         })
+        console.error("TE PASAS DE VERAS");
         this.setState({
             cliente: {
                 ...this.state.cliente,
