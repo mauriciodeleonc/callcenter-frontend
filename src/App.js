@@ -29,8 +29,8 @@ class App extends React.Component {
     this.handleSession = this.handleSession.bind(this);
     this.logOut = this.logOut.bind(this);
 
-    axios.defaults.baseURL = 'https://asinco.xyz'
-    //axios.defaults.baseURL = '';
+    //axios.defaults.baseURL = 'https://asinco.xyz'
+    axios.defaults.baseURL = 'http://localhost:3000';
   }
 
   logOut(){

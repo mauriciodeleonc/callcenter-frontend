@@ -167,8 +167,13 @@ class Reporte extends React.Component{
         if(diffDays > 31){
             return alert("Por favor escoja un rango menor a 1 mes");
         }
-        let dia1 = encodeURI(date1.getFullYear() + "-" + (date1.getMonth() + 1) + "-" + date1.getDate());
-        let dia2 = encodeURI(date2.getFullYear() + "-" + (date2.getMonth() + 1) + "-" + date2.getDate());
+        const mes1 = date1.getMonth() + 1;
+        const mes2 = date2.getMonth() + 1;
+
+        const el_dia1 = date1.getDate() + 1;
+        const el_dia2 = date2.getDate() + 1;
+        let dia1 = date1.getFullYear() + "-" + (mes1 < 10 ? `0${mes1}` : mes1) + "-" + (el_dia1 < 10 ? `0${el_dia1}` : el_dia1);
+        let dia2 = date2.getFullYear() + "-" + (mes2 < 10 ? `0${mes2}` : mes2) + "-" + (el_dia2 < 10 ? `0${el_dia2}` : el_dia2);
 
         const configExcel = {
             method: 'get',
@@ -186,7 +191,12 @@ class Reporte extends React.Component{
             link.click();
         })
         .catch((error) => console.log(error));*/
-        axios.get(`/gestiones/excel/${idCartera}?fechaHoraInicio=${dia1}&fechaHoraFin=${dia2}`).then((res) => {
+        axios.get(`/gestiones/${idCartera}`, {
+            headers: {
+                fecha_hora_inicio: `${dia1} 23:59:59`,
+                fecha_hora_fin: `${dia2} 23:59:59`
+            }
+        }).then((res) => {
 
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(res.data.data);
