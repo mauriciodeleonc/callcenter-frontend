@@ -191,12 +191,8 @@ class Reporte extends React.Component{
             link.click();
         })
         .catch((error) => console.log(error));*/
-        axios.get(`/gestiones/${idCartera}`, {
-            headers: {
-                fecha_hora_inicio: `${dia1} 23:59:59`,
-                fecha_hora_fin: `${dia2} 23:59:59`
-            }
-        }).then((res) => {
+        axios.get(`/gestiones/${idCartera}?fecha_hora_inicio=${dia1} 23:59:59&fecha_hora_fin=${dia2} 23:59:59`)
+        .then((res) => {
 
             const wb = XLSX.utils.book_new();
             const ws = XLSX.utils.json_to_sheet(res.data.data);
