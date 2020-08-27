@@ -333,8 +333,8 @@ class Llamar extends React.Component{
                 },
                 clienteReady: true,
                 creditos: clienteInfo.Creditos,
-                referencias: clienteInfo.Referencias,
-                gestiones
+                referencias: lodash.cloneDeep(clienteInfo.Referencias),
+                gestiones: lodash.cloneDeep(gestiones)
             })
         });
     }
