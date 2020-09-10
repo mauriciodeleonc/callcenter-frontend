@@ -4,6 +4,8 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import LoginRedirect from './LoginRedirect';
+import XLSX from 'xlsx';
+
 const FormData = require('form-data');
 
 class Cartera extends React.Component{
@@ -32,7 +34,13 @@ class Cartera extends React.Component{
         };
         axios(config)
             .then((response) => {
-                this.getCartera(idCartera);
+
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.json_to_sheet(response.data.data.corrupted);
+                XLSX.utils.book_append_sheet(wb, ws, "A corregir");
+                /* generate XLSX file and send to client */
+                XLSX.writeFile(wb, "reporte_corruptas.xlsx")
+                //this.getCartera(idCartera);
             })
             .catch((error) => {
                 console.log(error);
